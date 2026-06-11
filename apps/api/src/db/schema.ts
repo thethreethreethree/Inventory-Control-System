@@ -53,6 +53,11 @@ export const movementType = pgEnum("movement_type", [
   "adjustment",
   "count_correction",
 ]);
+export const transferStatus = pgEnum("transfer_status", [
+  "in_transit",
+  "received",
+  "cancelled",
+]);
 
 // ---------------------------------------------------------------------------
 // Tenancy & identity
@@ -316,6 +321,49 @@ export const stockBalances = pgTable(
     updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
   },
   (t) => [primaryKey({ columns: [t.orgId, t.itemId, t.locationId] })],
+);
+
+// ---------------------------------------------------------------------------
+// Transfers (the who-released -> who-received handoff)
+// ---------------------------------------------------------------------------
+// On create: stock leaves source (transfer_out) and the transfer is in_transit.
+// On confirm: stock arrives at destination (transfer_in) and status -> received.
+// In-transit stock is intentionally at neither location until confirmed.
+export const transfers = pgTable("transfers", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  orgId: uuid("org_id")
+    .notNull()
+    .references(() => orgs.id),
+  fromLocationId: uuid("from_location_id")
+    .notNull()
+    .references(() => locations.id),
+  toLocationId: uuid("to_location_id")
+    .notNull()
+    .references(() => locations.id),
+  status: transferStatus("status").default("in_transit").notNull(),
+  reasonCode: varchar("reason_code", { length: 50 }),
+  issuedByUserId: uuid("issued_by_user_id").references(() => users.id),
+  receivedByUserId: uuid("received_by_user_id").references(() => users.id),
+  issuedAt: timestamp("issued_at", { withTimezone: true }).defaultNow().notNull(),
+  receivedAt: timestamp("received_at", { withTimezone: true }),
+});
+
+export const transferLines = pgTable(
+  "transfer_lines",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    orgId: uuid("org_id")
+      .notNull()
+      .references(() => orgs.id),
+    transferId: uuid("transfer_id")
+      .notNull()
+      .references(() => transfers.id),
+    itemId: uuid("item_id")
+      .notNull()
+      .references(() => items.id),
+    baseQty: numeric("base_qty", { precision: 20, scale: 4 }).notNull(), // positive magnitude
+  },
+  (t) => [index("transfer_lines_transfer_idx").on(t.transferId)],
 );
 
 // ---------------------------------------------------------------------------

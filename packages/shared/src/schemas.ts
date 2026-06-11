@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { MOVEMENT_TYPES } from "./movements";
+import { POSTABLE_MOVEMENT_TYPES } from "./movements";
 
 /** Validation contracts shared by API and web. */
 
@@ -19,15 +19,46 @@ export const createItemSchema = z.object({
 });
 export type CreateItemInput = z.infer<typeof createItemSchema>;
 
-/** A quantity is always expressed in the item's base unit, and may be fractional
- * (e.g. a bottle 0.4 full = 300 ml). Full-unit-only counting is a known hole. */
-export const createMovementSchema = z.object({
+/**
+ * Record a stock movement. `qty` is a POSITIVE magnitude in the item's base
+ * unit and may be fractional (a bottle 0.4 full = 300 ml). The server derives
+ * the signed delta from `movementType`. Full-unit-only counting is a known hole,
+ * so fractional quantities are first-class.
+ */
+export const recordMovementSchema = z.object({
   itemId: z.string().uuid(),
   locationId: z.string().uuid(),
-  baseQty: z.number().finite(), // signed
-  movementType: z.enum(MOVEMENT_TYPES),
+  qty: z.number().positive(),
+  movementType: z.enum(POSTABLE_MOVEMENT_TYPES),
   reasonCode: z.string().max(50).optional(),
   occurredAt: z.string().datetime().optional(),
+  actorUserId: z.string().uuid().optional(),
   counterpartyUserId: z.string().uuid().optional(),
 });
-export type CreateMovementInput = z.infer<typeof createMovementSchema>;
+export type RecordMovementInput = z.infer<typeof recordMovementSchema>;
+
+/**
+ * Create an inter-location transfer. On creation the stock leaves the source
+ * (transfer_out) and the transfer sits `in_transit` until the receiver confirms
+ * — modelling real in-transit stock and the who-released -> who-received handoff.
+ */
+export const createTransferSchema = z.object({
+  fromLocationId: z.string().uuid(),
+  toLocationId: z.string().uuid(),
+  reasonCode: z.string().max(50).optional(),
+  issuedByUserId: z.string().uuid().optional(),
+  lines: z
+    .array(
+      z.object({
+        itemId: z.string().uuid(),
+        qty: z.number().positive(),
+      }),
+    )
+    .min(1),
+});
+export type CreateTransferInput = z.infer<typeof createTransferSchema>;
+
+export const confirmTransferSchema = z.object({
+  receivedByUserId: z.string().uuid().optional(),
+});
+export type ConfirmTransferInput = z.infer<typeof confirmTransferSchema>;

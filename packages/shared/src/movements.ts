@@ -30,3 +30,27 @@ export const MOVEMENT_SIGN: Record<MovementType, "+" | "-" | "+/-"> = {
   adjustment: "+/-",
   count_correction: "+/-",
 };
+
+/**
+ * Movement types a client may post directly via POST /movements. The caller
+ * sends a POSITIVE magnitude; the server derives the signed delta from the type
+ * (a caller can never accidentally send +100 for an "issue"). Transfers go
+ * through their own endpoint; adjustments/counts arrive in later phases.
+ */
+export const POSTABLE_MOVEMENT_TYPES = [
+  "receipt",
+  "issue",
+  "waste",
+  "breakage",
+  "comp",
+] as const;
+export type PostableMovementType = (typeof POSTABLE_MOVEMENT_TYPES)[number];
+
+/** Sign applied to the posted magnitude, per postable type. */
+export const MOVEMENT_DELTA: Record<PostableMovementType, 1 | -1> = {
+  receipt: 1,
+  issue: -1,
+  waste: -1,
+  breakage: -1,
+  comp: -1,
+};
