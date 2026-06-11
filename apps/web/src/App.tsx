@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import { useActingUser } from "./lib/actingUser";
+import { Brand } from "./components/Brand";
 
 const NAV = [
   { to: "/", label: "Dashboard", end: true },
@@ -33,9 +34,7 @@ export function App() {
   return (
     <div className="layout">
       <aside className="sidebar">
-        <div className="brand">
-          Inventory<span>Control</span>
-        </div>
+        <Brand />
         <nav>
           {NAV.map((n) => (
             <NavLink

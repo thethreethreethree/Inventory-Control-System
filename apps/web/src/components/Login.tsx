@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from "react";
 import { Button, Field, Input } from "./ui";
+import { Brand } from "./Brand";
 
 export function Login({
   onSubmit,
@@ -27,9 +28,8 @@ export function Login({
   return (
     <div className="login-wrap">
       <form className="login-card" onSubmit={submit}>
-        <div className="brand-lg">
-          Inventory<span>Control</span>
-        </div>
+        <Brand variant="login" />
+        <p className="tagline">Control. Track. Optimize.</p>
         <p className="muted">Sign in to continue</p>
         {err && <div className="error">{err}</div>}
         <Field label="Email">

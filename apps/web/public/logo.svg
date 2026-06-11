@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" role="img" aria-label="InvenTrack Solutions">
+  <!-- gear teeth (one accent segment in brand blue, echoing the logo) -->
+  <g fill="#1d3a5f">
+    <rect x="21" y="1.5" width="6" height="8" rx="1.5" transform="rotate(90 24 24)"/>
+    <rect x="21" y="1.5" width="6" height="8" rx="1.5" transform="rotate(135 24 24)"/>
+    <rect x="21" y="1.5" width="6" height="8" rx="1.5" transform="rotate(180 24 24)"/>
+    <rect x="21" y="1.5" width="6" height="8" rx="1.5" transform="rotate(225 24 24)"/>
+    <rect x="21" y="1.5" width="6" height="8" rx="1.5" transform="rotate(270 24 24)"/>
+  </g>
+  <g fill="#2b5c9e">
+    <rect x="21" y="1.5" width="6" height="8" rx="1.5"/>
+    <rect x="21" y="1.5" width="6" height="8" rx="1.5" transform="rotate(45 24 24)"/>
+    <rect x="21" y="1.5" width="6" height="8" rx="1.5" transform="rotate(315 24 24)"/>
+  </g>
+  <!-- gear ring -->
+  <circle cx="24" cy="24" r="15" fill="none" stroke="#1d3a5f" stroke-width="6"/>
+  <!-- magnifier lens -->
+  <circle cx="22" cy="22" r="8.5" fill="#ffffff" stroke="#1d3a5f" stroke-width="3"/>
+  <!-- magnifier handle -->
+  <line x1="28.2" y1="28.2" x2="35" y2="35" stroke="#1d3a5f" stroke-width="3.6" stroke-linecap="round"/>
+  <!-- verified check inside the lens -->
+  <path d="M17.8 22 l3 3 l5.6 -6.2" fill="none" stroke="#2b5c9e" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

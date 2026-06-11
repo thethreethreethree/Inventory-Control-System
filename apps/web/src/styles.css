@@ -1,10 +1,14 @@
 :root {
-  --bg: #f4f6f8;
+  /* InvenTrack Solutions — navy / blue / black from the brand mark */
+  --bg: #eef2f7;
   --panel: #ffffff;
-  --ink: #1a1d21;
-  --muted: #6b7280;
-  --line: #e6e9ed;
-  --brand: #2563eb;
+  --ink: #15263d;
+  --muted: #5d6b80;
+  --line: #dce3ec;
+  --navy: #1d3a5f;
+  --navy-deep: #13294a;
+  --brand: #2b5c9e;
+  --brand-hover: #224a80;
   --brand-ink: #fff;
   --ok-bg: #d8f3df;
   --ok-ink: #14532d;
@@ -12,8 +16,8 @@
   --warn-ink: #854d0e;
   --bad-bg: #fde2e1;
   --bad-ink: #7f1d1d;
-  --info-bg: #dbeafe;
-  --info-ink: #1e3a8a;
+  --info-bg: #dde9f7;
+  --info-ink: #1d3a5f;
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 
@@ -37,8 +41,8 @@ a {
   min-height: 100vh;
 }
 .sidebar {
-  background: #0f172a;
-  color: #cbd5e1;
+  background: linear-gradient(180deg, #1c3a5e 0%, var(--navy-deep) 100%);
+  color: #c3d2e6;
   display: flex;
   flex-direction: column;
   padding: 1rem 0.75rem;
@@ -46,14 +50,30 @@ a {
   top: 0;
   height: 100vh;
 }
-.brand {
-  font-weight: 700;
-  font-size: 1.1rem;
-  color: #fff;
-  padding: 0.25rem 0.5rem 1rem;
+.brandmark {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
 }
-.brand span {
-  color: #60a5fa;
+.brandmark.sidebar {
+  color: #fff;
+  padding: 0.35rem 0.5rem 1.1rem;
+}
+.brand-name {
+  font-weight: 800;
+  font-size: 1.05rem;
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+.brand-name span {
+  color: #7fb0e8;
+}
+.brand-sub {
+  font-size: 0.6rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  margin-top: 3px;
+  color: #93a7c0;
 }
 .sidebar nav {
   display: flex;
@@ -123,7 +143,7 @@ a {
   min-height: 100vh;
   display: grid;
   place-items: center;
-  background: #0f172a;
+  background: radial-gradient(1200px 600px at 50% -10%, #224a7a 0%, var(--navy-deep) 55%);
   padding: 1rem;
 }
 .login-card {
@@ -134,12 +154,28 @@ a {
   max-width: 360px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
 }
-.brand-lg {
-  font-weight: 800;
-  font-size: 1.5rem;
+.brandmark.login {
+  color: var(--navy);
+  justify-content: center;
+  margin-bottom: 0.4rem;
 }
-.brand-lg span {
+.brandmark.login .brand-name {
+  font-size: 1.4rem;
+}
+.brandmark.login .brand-name span {
   color: var(--brand);
+}
+.brandmark.login .brand-sub {
+  color: var(--muted);
+}
+.tagline {
+  text-align: center;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--muted);
+  margin: 0 0 1.4rem;
 }
 .login-card .muted {
   margin: 0.25rem 0 1.25rem;
@@ -161,6 +197,7 @@ a {
 h1 {
   font-size: 1.45rem;
   margin: 0;
+  color: var(--navy);
 }
 h2 {
   font-size: 1rem;
@@ -294,7 +331,7 @@ table.tbl {
   color: #fff;
 }
 .btn.primary:hover:not(:disabled) {
-  background: #1d4ed8;
+  background: var(--brand-hover);
 }
 .btn.ghost {
   background: #fff;
@@ -401,6 +438,7 @@ code {
 .kpi .value {
   font-size: 1.6rem;
   font-weight: 700;
+  color: var(--navy);
 }
 .kpi .label {
   color: var(--muted);

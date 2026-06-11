@@ -1,4 +1,6 @@
-# Inventory Control System
+# InvenTrack Solutions
+
+**Control. Track. Optimize.**
 
 Record, track, and audit inventory flow with full accountability. The design discipline is
 in [`InventoryControlThinker.md`](InventoryControlThinker.md); the architecture is in
