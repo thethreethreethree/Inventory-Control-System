@@ -1,104 +1,75 @@
 import { useEffect, useState } from "react";
-import { getJSON, type Balance, type Health, type Item } from "./api";
+import { NavLink, Outlet } from "react-router-dom";
+import { useActingUser } from "./lib/actingUser";
+
+const NAV = [
+  { to: "/", label: "Dashboard", end: true },
+  { to: "/items", label: "Items" },
+  { to: "/movements", label: "Movements" },
+  { to: "/transfers", label: "Transfers" },
+  { to: "/counts", label: "Counts" },
+  { to: "/adjustments", label: "Adjustments" },
+  { to: "/purchasing", label: "Purchasing" },
+  { to: "/recipes", label: "Recipes & Sales" },
+  { to: "/periods", label: "Periods" },
+];
 
 export function App() {
-  const [health, setHealth] = useState<Health | null>(null);
-  const [balances, setBalances] = useState<Balance[]>([]);
-  const [items, setItems] = useState<Item[]>([]);
-  const [error, setError] = useState<string | null>(null);
+  const [db, setDb] = useState<"up" | "down" | "…">("…");
+  const { users, userId, setUserId } = useActingUser();
 
   useEffect(() => {
-    Promise.all([
-      getJSON<Health>("/health"),
-      getJSON<Balance[]>("/balances"),
-      getJSON<Item[]>("/items"),
-    ])
-      .then(([h, b, i]) => {
-        setHealth(h);
-        setBalances(b);
-        setItems(i);
-      })
-      .catch((e: unknown) => setError(e instanceof Error ? e.message : String(e)));
+    const tick = () =>
+      fetch("/api/health")
+        .then((r) => r.json())
+        .then((h: { db?: string }) => setDb(h.db === "up" ? "up" : "down"))
+        .catch(() => setDb("down"));
+    void tick();
+    const id = setInterval(tick, 15000);
+    return () => clearInterval(id);
   }, []);
 
   return (
-    <main className="page">
-      <header className="topbar">
-        <h1>Inventory Control System</h1>
-        <span className={`badge ${health?.db === "up" ? "ok" : "bad"}`}>
-          {health ? `API ${health.status} · DB ${health.db}` : "connecting…"}
-        </span>
-      </header>
-
-      {error && (
-        <p className="error">
-          Could not reach the API ({error}). Is it running on :4000? Try{" "}
-          <code>pnpm dev:api</code>.
-        </p>
-      )}
-
-      <section>
-        <h2>On-hand (derived from the ledger)</h2>
-        <p className="hint">
-          These numbers are <code>SUM(movements.base_qty)</code> — not a stored value.
-          That is the core accountability guarantee.
-        </p>
-        <table>
-          <thead>
-            <tr>
-              <th>SKU</th>
-              <th>Item</th>
-              <th>Location</th>
-              <th className="num">On hand</th>
-              <th>Unit</th>
-            </tr>
-          </thead>
-          <tbody>
-            {balances.map((b) => (
-              <tr key={`${b.sku}-${b.location}`}>
-                <td>{b.sku}</td>
-                <td>{b.item}</td>
-                <td>{b.location}</td>
-                <td className="num">{b.on_hand}</td>
-                <td>{b.unit}</td>
-              </tr>
+    <div className="layout">
+      <aside className="sidebar">
+        <div className="brand">
+          Inventory<span>Control</span>
+        </div>
+        <nav>
+          {NAV.map((n) => (
+            <NavLink
+              key={n.to}
+              to={n.to}
+              end={n.end}
+              className={({ isActive }) => (isActive ? "nav active" : "nav")}
+            >
+              {n.label}
+            </NavLink>
+          ))}
+        </nav>
+        <div className="acting-as">
+          <span className="acting-label">Acting as</span>
+          <select
+            className="acting-select"
+            value={userId ?? ""}
+            onChange={(e) => setUserId(e.target.value)}
+          >
+            {users.length === 0 && <option value="">…</option>}
+            {users.map((u) => (
+              <option key={u.id} value={u.id}>
+                {u.name}
+              </option>
             ))}
-            {balances.length === 0 && !error && (
-              <tr>
-                <td colSpan={5} className="muted">
-                  No movements yet — run <code>pnpm db:seed</code>.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </section>
-
-      <section>
-        <h2>Item master</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>SKU</th>
-              <th>Name</th>
-              <th>Brand</th>
-              <th>Type</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {items.map((it) => (
-              <tr key={it.id}>
-                <td>{it.sku}</td>
-                <td>{it.name}</td>
-                <td>{it.brand ?? "—"}</td>
-                <td>{it.itemType}</td>
-                <td>{it.status}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </section>
-    </main>
+          </select>
+        </div>
+        <div className="sidebar-foot">
+          <span className={`dot ${db === "up" ? "ok" : db === "down" ? "bad" : ""}`} />
+          API {db === "…" ? "checking…" : db}
+        </div>
+      </aside>
+      <main className="content">
+        <Outlet />
+      </main>
+    </div>
   );
 }
