@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import { useActingUser } from "./lib/actingUser";
 import { Brand } from "./components/Brand";
+import { Calculator } from "./components/Calculator";
 
 const NAV = [
   { to: "/", label: "Dashboard", end: true },
@@ -18,6 +19,7 @@ const NAV = [
 
 export function App() {
   const [db, setDb] = useState<"up" | "down" | "…">("…");
+  const [calcOpen, setCalcOpen] = useState(false);
   const { user, logout } = useActingUser();
 
   useEffect(() => {
@@ -62,6 +64,16 @@ export function App() {
       <main className="content">
         <Outlet />
       </main>
+
+      <button
+        className="calc-fab"
+        onClick={() => setCalcOpen((o) => !o)}
+        title="Calculator"
+        aria-label="Calculator"
+      >
+        🧮
+      </button>
+      {calcOpen && <Calculator onClose={() => setCalcOpen(false)} />}
     </div>
   );
 }
