@@ -1,7 +1,8 @@
-import { sql } from "drizzle-orm";
+import { and, eq, gte, lte, sql } from "drizzle-orm";
 import type { MovementType } from "@ics/shared";
 import { db } from "../db/client";
-import { movements } from "../db/schema";
+import { movements, periods } from "../db/schema";
+import { httpError } from "../lib/errors";
 
 /** A transaction handle (extracted from db.transaction's callback). */
 export type Tx = Parameters<Parameters<typeof db.transaction>[0]>[0];
@@ -29,6 +30,26 @@ export interface PostMovementInput {
  */
 export async function postMovement(tx: Tx, input: PostMovementInput) {
   const qty = input.signedBaseQty.toString();
+  const occurredAt = input.occurredAt ?? new Date();
+
+  // A movement dated inside a locked period is forbidden — no backdating into
+  // a closed/audited period. Applies to every movement type (issue, transfer,
+  // receipt, adjustment) since they all flow through here.
+  const locked = await tx
+    .select({ id: periods.id })
+    .from(periods)
+    .where(
+      and(
+        eq(periods.orgId, input.orgId),
+        eq(periods.status, "locked"),
+        lte(periods.startsAt, occurredAt),
+        gte(periods.endsAt, occurredAt),
+      ),
+    )
+    .limit(1);
+  if (locked.length > 0) {
+    throw httpError("period is locked; cannot post a movement dated within it", 409);
+  }
 
   const [movement] = await tx
     .insert(movements)
@@ -39,7 +60,7 @@ export async function postMovement(tx: Tx, input: PostMovementInput) {
       baseQty: qty,
       movementType: input.movementType,
       reasonCode: input.reasonCode ?? null,
-      occurredAt: input.occurredAt ?? new Date(),
+      occurredAt,
       actorUserId: input.actorUserId ?? null,
       counterpartyUserId: input.counterpartyUserId ?? null,
       refType: input.refType ?? null,
@@ -62,6 +83,21 @@ export async function postMovement(tx: Tx, input: PostMovementInput) {
  * Rebuild the entire balance cache for an org from the ledger. Proves the cache
  * is fully derivable (the core accountability guarantee) and self-heals drift.
  */
+/** Theoretical on-hand for one (item, location), straight from the ledger. */
+export async function getLedgerBalance(
+  orgId: string,
+  itemId: string,
+  locationId: string,
+): Promise<number> {
+  const rows = await db.execute(sql`
+    SELECT COALESCE(SUM(base_qty), 0)::text AS qty
+    FROM movements
+    WHERE org_id = ${orgId} AND item_id = ${itemId} AND location_id = ${locationId}
+  `);
+  const arr = Array.from(rows as Iterable<{ qty: string }>);
+  return Number(arr[0]?.qty ?? 0);
+}
+
 export async function rebuildBalances(orgId: string): Promise<void> {
   await db.transaction(async (tx) => {
     await tx.execute(sql`DELETE FROM stock_balances WHERE org_id = ${orgId}`);

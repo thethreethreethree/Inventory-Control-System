@@ -132,3 +132,58 @@ export const recordInvoiceSchema = z.object({
   invoiceDate: z.string().datetime().optional(),
 });
 export type RecordInvoiceInput = z.infer<typeof recordInvoiceSchema>;
+
+// --- Counts, adjustments & periods (audit / reconciliation) -----------------
+
+export const createCountSchema = z.object({
+  locationId: z.string().uuid(),
+  scope: z.enum(["daily_spot", "weekly", "monthly_full"]).optional(),
+  blind: z.boolean().optional(),
+  startedByUserId: z.string().uuid().optional(),
+  note: z.string().optional(),
+});
+export type CreateCountInput = z.infer<typeof createCountSchema>;
+
+export const submitCountLinesSchema = z.object({
+  lines: z
+    .array(
+      z.object({
+        itemId: z.string().uuid(),
+        countedQty: z.number().nonnegative(), // a counted zero is valid
+        unitCode: z.string().min(1),
+      }),
+    )
+    .min(1),
+});
+export type SubmitCountLinesInput = z.infer<typeof submitCountLinesSchema>;
+
+export const postCountSchema = z.object({
+  postedByUserId: z.string().uuid().optional(),
+});
+
+export const createAdjustmentSchema = z.object({
+  itemId: z.string().uuid(),
+  locationId: z.string().uuid(),
+  baseQtyDelta: z.number().refine((v) => v !== 0, "delta must be non-zero"),
+  reason: z.string().min(1).max(50),
+  requestedByUserId: z.string().uuid().optional(),
+  note: z.string().optional(),
+});
+export type CreateAdjustmentInput = z.infer<typeof createAdjustmentSchema>;
+
+export const reviewAdjustmentSchema = z.object({
+  reviewedByUserId: z.string().uuid().optional(),
+  note: z.string().optional(),
+});
+
+export const createPeriodSchema = z.object({
+  type: z.enum(["daily", "weekly", "monthly"]),
+  startsAt: z.string().datetime(),
+  endsAt: z.string().datetime(),
+});
+export type CreatePeriodInput = z.infer<typeof createPeriodSchema>;
+
+export const closePeriodSchema = z.object({
+  closedByUserId: z.string().uuid().optional(),
+  lock: z.boolean().optional(),
+});

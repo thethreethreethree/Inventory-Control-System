@@ -520,6 +520,113 @@ export const supplierInvoices = pgTable(
 );
 
 // ---------------------------------------------------------------------------
+// Counts, adjustments & periods (the audit / reconciliation engine)
+// ---------------------------------------------------------------------------
+export const countScope = pgEnum("count_scope", [
+  "daily_spot",
+  "weekly",
+  "monthly_full",
+]);
+export const countStatus = pgEnum("count_status", ["counting", "posted", "cancelled"]);
+export const adjustmentStatus = pgEnum("adjustment_status", [
+  "pending",
+  "approved",
+  "rejected",
+]);
+export const periodType = pgEnum("period_type", ["daily", "weekly", "monthly"]);
+export const periodStatus = pgEnum("period_status", ["open", "closed", "locked"]);
+
+/**
+ * A proposed correction to stock. Created pending; on approval it posts a
+ * compensating movement. Approver must differ from requester (separation of
+ * duties) — this is what stops someone "correcting" a count to hide a gap.
+ */
+export const adjustments = pgTable(
+  "adjustments",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    orgId: uuid("org_id")
+      .notNull()
+      .references(() => orgs.id),
+    itemId: uuid("item_id")
+      .notNull()
+      .references(() => items.id),
+    locationId: uuid("location_id")
+      .notNull()
+      .references(() => locations.id),
+    baseQtyDelta: numeric("base_qty_delta", { precision: 20, scale: 4 }).notNull(), // signed
+    reason: varchar("reason", { length: 50 }).notNull(),
+    refType: varchar("ref_type", { length: 40 }), // e.g. "count"
+    refId: uuid("ref_id"),
+    status: adjustmentStatus("status").default("pending").notNull(),
+    requestedByUserId: uuid("requested_by_user_id").references(() => users.id),
+    reviewedByUserId: uuid("reviewed_by_user_id").references(() => users.id),
+    reviewedAt: timestamp("reviewed_at", { withTimezone: true }),
+    postedMovementId: uuid("posted_movement_id"),
+    note: text("note"),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (t) => [index("adjustments_org_status_idx").on(t.orgId, t.status)],
+);
+
+// A stocktake session (physical count) at a location.
+export const stockCounts = pgTable("stock_counts", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  orgId: uuid("org_id")
+    .notNull()
+    .references(() => orgs.id),
+  locationId: uuid("location_id")
+    .notNull()
+    .references(() => locations.id),
+  scope: countScope("scope").default("daily_spot").notNull(),
+  blind: boolean("blind").default(true).notNull(),
+  status: countStatus("status").default("counting").notNull(),
+  startedByUserId: uuid("started_by_user_id").references(() => users.id),
+  startedAt: timestamp("started_at", { withTimezone: true }).defaultNow().notNull(),
+  postedByUserId: uuid("posted_by_user_id").references(() => users.id),
+  postedAt: timestamp("posted_at", { withTimezone: true }),
+  note: text("note"),
+});
+
+export const countLines = pgTable(
+  "count_lines",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    orgId: uuid("org_id")
+      .notNull()
+      .references(() => orgs.id),
+    countId: uuid("count_id")
+      .notNull()
+      .references(() => stockCounts.id),
+    itemId: uuid("item_id")
+      .notNull()
+      .references(() => items.id),
+    countedBaseQty: numeric("counted_base_qty", { precision: 20, scale: 4 }).notNull(),
+    expectedBaseQty: numeric("expected_base_qty", { precision: 20, scale: 4 }), // snapshot at post
+    varianceBase: numeric("variance_base", { precision: 20, scale: 4 }),
+    withinTolerance: boolean("within_tolerance"),
+    adjustmentId: uuid("adjustment_id").references(() => adjustments.id),
+    note: text("note"),
+  },
+  (t) => [uniqueIndex("count_lines_count_item_uniq").on(t.countId, t.itemId)],
+);
+
+// Accounting periods. Locking a period blocks backdated movements into it.
+export const periods = pgTable("periods", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  orgId: uuid("org_id")
+    .notNull()
+    .references(() => orgs.id),
+  type: periodType("type").notNull(),
+  startsAt: timestamp("starts_at", { withTimezone: true }).notNull(),
+  endsAt: timestamp("ends_at", { withTimezone: true }).notNull(),
+  status: periodStatus("status").default("open").notNull(),
+  closedByUserId: uuid("closed_by_user_id").references(() => users.id),
+  closedAt: timestamp("closed_at", { withTimezone: true }),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+});
+
+// ---------------------------------------------------------------------------
 // Audit log (who did what in the app — distinct from the ledger)
 // ---------------------------------------------------------------------------
 export const auditLog = pgTable(
