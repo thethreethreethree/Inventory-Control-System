@@ -130,6 +130,13 @@ export const api = {
       "/sales-imports",
       b,
     ),
+
+  // reports
+  reportValuation: () => get<Record<string, string | null>[]>("/reports/valuation"),
+  reportReorder: () => get<Record<string, string | null>[]>("/reports/reorder"),
+  reportVariance: () => get<Record<string, string | null>[]>("/reports/variance"),
+  reportExpiry: (days = 30) => get<Record<string, string | null>[]>(`/reports/expiry?days=${days}`),
+  reportActivity: () => get<Record<string, string | number | null>[]>("/reports/activity"),
 };
 
 export interface CountVariance {

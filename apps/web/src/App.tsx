@@ -12,6 +12,7 @@ const NAV = [
   { to: "/purchasing", label: "Purchasing" },
   { to: "/recipes", label: "Recipes & Sales" },
   { to: "/periods", label: "Periods" },
+  { to: "/reports", label: "Reports" },
 ];
 
 export function App() {

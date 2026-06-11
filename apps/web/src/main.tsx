@@ -12,6 +12,7 @@ import { Adjustments } from "./pages/Adjustments";
 import { Purchasing } from "./pages/Purchasing";
 import { Recipes } from "./pages/Recipes";
 import { Periods } from "./pages/Periods";
+import { Reports } from "./pages/Reports";
 import "./styles.css";
 
 const root = document.getElementById("root");
@@ -32,6 +33,7 @@ createRoot(root).render(
           <Route path="/purchasing" element={<Purchasing />} />
           <Route path="/recipes" element={<Recipes />} />
           <Route path="/periods" element={<Periods />} />
+          <Route path="/reports" element={<Reports />} />
           </Route>
         </Routes>
       </ActingUserProvider>
