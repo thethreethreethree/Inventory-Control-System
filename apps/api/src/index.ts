@@ -8,17 +8,27 @@ import { locationRoutes } from "./routes/locations";
 import { balanceRoutes } from "./routes/balances";
 import { movementRoutes } from "./routes/movements";
 import { transferRoutes } from "./routes/transfers";
+import { userRoutes } from "./routes/users";
+import { supplierRoutes } from "./routes/suppliers";
+import { purchaseOrderRoutes } from "./routes/purchaseOrders";
+import { goodsReceiptRoutes } from "./routes/goodsReceipts";
+import { invoiceRoutes } from "./routes/invoices";
 
 const app = Fastify({ logger: true });
 
 await app.register(cors, { origin: true });
 await app.register(healthRoutes);
 await app.register(authRoutes, { prefix: "/auth" });
+await app.register(userRoutes, { prefix: "/users" });
 await app.register(itemRoutes, { prefix: "/items" });
 await app.register(locationRoutes, { prefix: "/locations" });
 await app.register(balanceRoutes, { prefix: "/balances" });
 await app.register(movementRoutes, { prefix: "/movements" });
 await app.register(transferRoutes, { prefix: "/transfers" });
+await app.register(supplierRoutes, { prefix: "/suppliers" });
+await app.register(purchaseOrderRoutes, { prefix: "/purchase-orders" });
+await app.register(goodsReceiptRoutes, { prefix: "/goods-receipts" });
+await app.register(invoiceRoutes, { prefix: "/invoices" });
 
 try {
   await app.listen({ port: env.API_PORT, host: "0.0.0.0" });

@@ -20,6 +20,7 @@ import {
   items,
   itemPackLevels,
   movements,
+  suppliers,
 } from "./schema";
 import { hashPassword } from "../lib/password";
 
@@ -76,6 +77,42 @@ async function main() {
   if (!admin) throw new Error("Failed to create admin user");
   const adminRoleId = roleByName.get("Admin");
   if (adminRoleId) await db.insert(userRoles).values({ userId: admin.id, roleId: adminRoleId });
+
+  // --- extra users (so separation of duties is real: orderer != approver) --
+  const [manager] = await db
+    .insert(users)
+    .values({
+      orgId: org.id,
+      name: "Manager",
+      email: "manager@demo.local",
+      passwordHash: hashPassword("manager123"),
+    })
+    .returning();
+  const managerRoleId = roleByName.get("Manager");
+  if (manager && managerRoleId)
+    await db.insert(userRoles).values({ userId: manager.id, roleId: managerRoleId });
+
+  const [purchaser] = await db
+    .insert(users)
+    .values({
+      orgId: org.id,
+      name: "Purchaser",
+      email: "purchaser@demo.local",
+      passwordHash: hashPassword("purchaser123"),
+    })
+    .returning();
+  const purchaserRoleId = roleByName.get("Purchaser");
+  if (purchaser && purchaserRoleId)
+    await db.insert(userRoles).values({ userId: purchaser.id, roleId: purchaserRoleId });
+
+  // --- supplier ------------------------------------------------------------
+  await db.insert(suppliers).values({
+    orgId: org.id,
+    name: "Acme Beverages",
+    terms: "Net 30",
+    leadTimeDays: 3,
+    contactEmail: "orders@acme.example",
+  });
 
   // --- units ---------------------------------------------------------------
   const unitRows = await db
@@ -201,7 +238,9 @@ async function main() {
 
   console.log("✓ Seed complete");
   console.log("  org:        Demo Org");
-  console.log("  login:      admin@demo.local / admin123");
+  console.log("  users:      admin@demo.local/admin123, manager@demo.local/manager123,");
+  console.log("              purchaser@demo.local/purchaser123");
+  console.log("  supplier:   Acme Beverages");
   console.log("  items:      GIN-750, TONIC-200, LIME");
   console.log("  movements:  3 opening receipts at Main Store");
 }

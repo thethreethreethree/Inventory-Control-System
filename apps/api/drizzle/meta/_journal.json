@@ -15,6 +15,13 @@
       "when": 1781199828321,
       "tag": "0001_open_killmonger",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1781201175913,
+      "tag": "0002_hot_silver_centurion",
+      "breakpoints": true
     }
   ]
 }

@@ -19,6 +19,7 @@ export interface PostMovementInput {
   counterpartyUserId?: string | null;
   refType?: string | null;
   refId?: string | null;
+  unitCost?: number | null;
 }
 
 /**
@@ -43,6 +44,7 @@ export async function postMovement(tx: Tx, input: PostMovementInput) {
       counterpartyUserId: input.counterpartyUserId ?? null,
       refType: input.refType ?? null,
       refId: input.refId ?? null,
+      unitCost: input.unitCost != null ? input.unitCost.toString() : null,
     })
     .returning();
 

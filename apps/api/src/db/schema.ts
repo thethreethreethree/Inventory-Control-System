@@ -367,6 +367,159 @@ export const transferLines = pgTable(
 );
 
 // ---------------------------------------------------------------------------
+// Purchasing & receiving (the 3-way match: PO <-> GRN <-> Invoice)
+// ---------------------------------------------------------------------------
+export const poStatus = pgEnum("po_status", [
+  "draft",
+  "approved",
+  "sent",
+  "partially_received",
+  "received",
+  "closed",
+  "cancelled",
+]);
+export const grnStatus = pgEnum("grn_status", ["posted", "cancelled"]);
+export const invoiceMatchStatus = pgEnum("invoice_match_status", [
+  "unmatched",
+  "matched",
+  "discrepancy",
+]);
+
+export const suppliers = pgTable(
+  "suppliers",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    orgId: uuid("org_id")
+      .notNull()
+      .references(() => orgs.id),
+    name: varchar("name", { length: 200 }).notNull(),
+    terms: varchar("terms", { length: 100 }),
+    leadTimeDays: integer("lead_time_days"),
+    contactEmail: varchar("contact_email", { length: 320 }),
+    contactPhone: varchar("contact_phone", { length: 50 }),
+    active: boolean("active").default(true).notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (t) => [uniqueIndex("suppliers_org_name_uniq").on(t.orgId, t.name)],
+);
+
+// What we ORDERED.
+export const purchaseOrders = pgTable(
+  "purchase_orders",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    orgId: uuid("org_id")
+      .notNull()
+      .references(() => orgs.id),
+    supplierId: uuid("supplier_id")
+      .notNull()
+      .references(() => suppliers.id),
+    reference: varchar("reference", { length: 60 }), // human PO number
+    status: poStatus("status").default("draft").notNull(),
+    orderedByUserId: uuid("ordered_by_user_id").references(() => users.id),
+    approvedByUserId: uuid("approved_by_user_id").references(() => users.id),
+    orderedAt: timestamp("ordered_at", { withTimezone: true }).defaultNow().notNull(),
+    expectedAt: timestamp("expected_at", { withTimezone: true }),
+    approvedAt: timestamp("approved_at", { withTimezone: true }),
+    note: text("note"),
+  },
+  (t) => [index("po_org_status_idx").on(t.orgId, t.status)],
+);
+
+export const poLines = pgTable(
+  "po_lines",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    orgId: uuid("org_id")
+      .notNull()
+      .references(() => orgs.id),
+    poId: uuid("po_id")
+      .notNull()
+      .references(() => purchaseOrders.id),
+    itemId: uuid("item_id")
+      .notNull()
+      .references(() => items.id),
+    qtyOrdered: numeric("qty_ordered", { precision: 20, scale: 4 }).notNull(),
+    unitId: uuid("unit_id")
+      .notNull()
+      .references(() => units.id),
+    unitCost: numeric("unit_cost", { precision: 14, scale: 4 }),
+    orderedBaseQty: numeric("ordered_base_qty", { precision: 20, scale: 4 }).notNull(),
+    receivedBaseQty: numeric("received_base_qty", { precision: 20, scale: 4 })
+      .default("0")
+      .notNull(),
+  },
+  (t) => [index("po_lines_po_idx").on(t.poId)],
+);
+
+// What physically ARRIVED (counted at the door). Posts receipt movements.
+export const goodsReceipts = pgTable("goods_receipts", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  orgId: uuid("org_id")
+    .notNull()
+    .references(() => orgs.id),
+  poId: uuid("po_id").references(() => purchaseOrders.id),
+  supplierId: uuid("supplier_id").references(() => suppliers.id),
+  locationId: uuid("location_id")
+    .notNull()
+    .references(() => locations.id),
+  receivedByUserId: uuid("received_by_user_id").references(() => users.id),
+  receivedAt: timestamp("received_at", { withTimezone: true }).defaultNow().notNull(),
+  status: grnStatus("status").default("posted").notNull(),
+  note: text("note"),
+});
+
+export const grnLines = pgTable(
+  "grn_lines",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    orgId: uuid("org_id")
+      .notNull()
+      .references(() => orgs.id),
+    grnId: uuid("grn_id")
+      .notNull()
+      .references(() => goodsReceipts.id),
+    poLineId: uuid("po_line_id").references(() => poLines.id),
+    itemId: uuid("item_id")
+      .notNull()
+      .references(() => items.id),
+    qtyReceived: numeric("qty_received", { precision: 20, scale: 4 }).notNull(),
+    unitId: uuid("unit_id")
+      .notNull()
+      .references(() => units.id),
+    receivedBaseQty: numeric("received_base_qty", { precision: 20, scale: 4 }).notNull(),
+    unitCost: numeric("unit_cost", { precision: 14, scale: 4 }),
+    lotNo: varchar("lot_no", { length: 80 }),
+    expiryDate: timestamp("expiry_date", { withTimezone: true }),
+    condition: varchar("condition", { length: 20 }).default("good").notNull(),
+  },
+  (t) => [index("grn_lines_grn_idx").on(t.grnId)],
+);
+
+// What we were BILLED. Matched against PO (ordered) and GRN (received).
+export const supplierInvoices = pgTable(
+  "supplier_invoices",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    orgId: uuid("org_id")
+      .notNull()
+      .references(() => orgs.id),
+    supplierId: uuid("supplier_id")
+      .notNull()
+      .references(() => suppliers.id),
+    poId: uuid("po_id").references(() => purchaseOrders.id),
+    invoiceNo: varchar("invoice_no", { length: 80 }).notNull(),
+    amount: numeric("amount", { precision: 14, scale: 4 }).notNull(),
+    invoiceDate: timestamp("invoice_date", { withTimezone: true }),
+    matchStatus: invoiceMatchStatus("match_status").default("unmatched").notNull(),
+    matchDetail: jsonb("match_detail").$type<Record<string, unknown>>(),
+    attachmentId: uuid("attachment_id"),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (t) => [index("invoices_org_supplier_idx").on(t.orgId, t.supplierId)],
+);
+
+// ---------------------------------------------------------------------------
 // Audit log (who did what in the app — distinct from the ledger)
 // ---------------------------------------------------------------------------
 export const auditLog = pgTable(

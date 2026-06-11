@@ -62,3 +62,73 @@ export const confirmTransferSchema = z.object({
   receivedByUserId: z.string().uuid().optional(),
 });
 export type ConfirmTransferInput = z.infer<typeof confirmTransferSchema>;
+
+// --- Purchasing & receiving (PO -> GRN -> Invoice 3-way match) --------------
+
+export const createSupplierSchema = z.object({
+  name: z.string().min(1).max(200),
+  terms: z.string().max(100).optional(),
+  leadTimeDays: z.number().int().nonnegative().optional(),
+  contactEmail: z.string().email().optional(),
+  contactPhone: z.string().max(50).optional(),
+});
+export type CreateSupplierInput = z.infer<typeof createSupplierSchema>;
+
+/** Quantities are in the line's `unitCode` (e.g. "case"); the server converts
+ * to base units via the item's pack hierarchy. */
+export const createPurchaseOrderSchema = z.object({
+  supplierId: z.string().uuid(),
+  reference: z.string().max(60).optional(),
+  expectedAt: z.string().datetime().optional(),
+  orderedByUserId: z.string().uuid().optional(),
+  note: z.string().optional(),
+  lines: z
+    .array(
+      z.object({
+        itemId: z.string().uuid(),
+        qtyOrdered: z.number().positive(),
+        unitCode: z.string().min(1),
+        unitCost: z.number().nonnegative().optional(),
+      }),
+    )
+    .min(1),
+});
+export type CreatePurchaseOrderInput = z.infer<typeof createPurchaseOrderSchema>;
+
+export const approvePurchaseOrderSchema = z.object({
+  approvedByUserId: z.string().uuid().optional(),
+});
+export type ApprovePurchaseOrderInput = z.infer<typeof approvePurchaseOrderSchema>;
+
+/** Goods received at the door — counted by a person. Posts receipt movements. */
+export const receiveGoodsSchema = z.object({
+  poId: z.string().uuid().optional(),
+  supplierId: z.string().uuid().optional(),
+  locationId: z.string().uuid(),
+  receivedByUserId: z.string().uuid().optional(),
+  note: z.string().optional(),
+  lines: z
+    .array(
+      z.object({
+        itemId: z.string().uuid(),
+        poLineId: z.string().uuid().optional(),
+        qtyReceived: z.number().positive(),
+        unitCode: z.string().min(1),
+        unitCost: z.number().nonnegative().optional(),
+        lotNo: z.string().max(80).optional(),
+        expiryDate: z.string().datetime().optional(),
+        condition: z.string().max(20).optional(),
+      }),
+    )
+    .min(1),
+});
+export type ReceiveGoodsInput = z.infer<typeof receiveGoodsSchema>;
+
+export const recordInvoiceSchema = z.object({
+  supplierId: z.string().uuid(),
+  poId: z.string().uuid().optional(),
+  invoiceNo: z.string().min(1).max(80),
+  amount: z.number().nonnegative(),
+  invoiceDate: z.string().datetime().optional(),
+});
+export type RecordInvoiceInput = z.infer<typeof recordInvoiceSchema>;
