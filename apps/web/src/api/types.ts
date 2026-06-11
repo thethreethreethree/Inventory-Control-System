@@ -14,6 +14,9 @@ export interface Item {
   brand: string | null;
   itemType: string;
   status: string;
+  category?: string | null;
+  unit?: string | null;
+  on_hand?: string | null;
 }
 export interface Location {
   id: string;
