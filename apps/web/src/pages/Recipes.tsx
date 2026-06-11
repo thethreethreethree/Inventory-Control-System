@@ -84,6 +84,7 @@ export function Recipes() {
     <>
       <PageHeader
         title="Recipes & Sales"
+        learn="Build recipes so that ingesting sales automatically subtracts each ingredient from stock — consumption captured without keying every pour."
         subtitle="A recipe maps a sold item to component quantities. Ingesting sales auto-depletes the components — consumption captured without keying every pour."
       />
       <ErrorBanner error={err} />

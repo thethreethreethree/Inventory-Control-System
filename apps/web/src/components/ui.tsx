@@ -4,14 +4,16 @@ export function PageHeader({
   title,
   subtitle,
   actions,
+  learn,
 }: {
   title: string;
   subtitle?: string;
   actions?: ReactNode;
+  learn?: string;
 }) {
   return (
     <div className="page-header">
-      <div>
+      <div data-learn={learn}>
         <h1>{title}</h1>
         {subtitle && <p className="subtitle">{subtitle}</p>}
       </div>

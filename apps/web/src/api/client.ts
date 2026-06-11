@@ -66,6 +66,21 @@ async function req<T>(method: string, path: string, body?: unknown): Promise<T> 
 
 const get = <T>(path: string) => req<T>("GET", path);
 const post = <T>(path: string, body?: unknown) => req<T>("POST", path, body ?? {});
+const put = <T>(path: string, body?: unknown) => req<T>("PUT", path, body ?? {});
+
+export interface AppSettings {
+  businessName: string;
+  currency: string;
+  defaultLocationId: string | null;
+  countTolerancePct: number;
+  allowNegativeStock: boolean;
+  requireApprovalForVariances: boolean;
+  tutorialEnabled: boolean;
+}
+export interface Category {
+  id: string;
+  name: string;
+}
 
 export const api = {
   // auth
@@ -138,6 +153,14 @@ export const api = {
   reportExpiry: (days = 30) => get<Record<string, string | null>[]>(`/reports/expiry?days=${days}`),
   reportActivity: () => get<Record<string, string | number | null>[]>("/reports/activity"),
   reportLots: () => get<Record<string, string | boolean | null>[]>("/reports/lots"),
+
+  // settings & management
+  settings: () => get<AppSettings>("/settings"),
+  updateSettings: (b: Partial<AppSettings>) => put<AppSettings>("/settings", b),
+  categories: () => get<Category[]>("/categories"),
+  createCategory: (b: unknown) => post<Category>("/categories", b),
+  createLocation: (b: unknown) => post<Location>("/locations", b),
+  createItem: (b: unknown) => post<Item>("/items", b),
 };
 
 export interface CountVariance {

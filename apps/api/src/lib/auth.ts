@@ -44,6 +44,10 @@ const PERMISSION_BY_ROUTE: Record<string, Permission> = {
   "POST /recipes": "item.create",
   "POST /sales-imports": "movement.create",
   "POST /balances/rebuild": "movement.read",
+  "PUT /settings": "user.manage",
+  "POST /locations": "user.manage",
+  "POST /categories": "item.create",
+  "POST /items": "item.create",
 };
 
 async function loadCtx(userId: string): Promise<Ctx | null> {

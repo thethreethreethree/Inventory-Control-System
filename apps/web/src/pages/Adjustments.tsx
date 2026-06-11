@@ -29,6 +29,7 @@ export function Adjustments() {
     <>
       <PageHeader
         title="Adjustments"
+        learn="Each row is a proposed stock correction. Approving it posts the fix to the ledger; you can't approve one you raised yourself (separation of duties)."
         subtitle="Stock corrections require approval — and the approver must differ from the requester."
       />
       <ErrorBanner error={err ?? adjustments.error} />

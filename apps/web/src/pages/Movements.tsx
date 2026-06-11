@@ -59,6 +59,7 @@ export function Movements() {
     <>
       <PageHeader
         title="Movements"
+        learn="Use this form to record a single stock change. Pick the type — the system applies the right + or − automatically and writes it to the ledger."
         subtitle="Record a receipt, issue, waste, breakage or comp. The sign is derived from the type."
       />
       <ErrorBanner error={err ?? feed.error} />

@@ -16,6 +16,7 @@ export function Reports() {
     <>
       <PageHeader
         title="Reports"
+        learn="These reports turn the ledger into decisions — value on hand, what moved, shrinkage, what to reorder, and what's expiring."
         subtitle="Everything the ledger already knows — valuation, activity, shrinkage, and alerts."
       />
       <ErrorBanner error={valuation.error ?? activity.error ?? varianceR.error} />

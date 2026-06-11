@@ -20,6 +20,8 @@ import { periodRoutes } from "./routes/periods";
 import { recipeRoutes } from "./routes/recipes";
 import { salesImportRoutes } from "./routes/salesImports";
 import { reportRoutes } from "./routes/reports";
+import { categoryRoutes } from "./routes/categories";
+import { settingsRoutes } from "./routes/settings";
 
 const app = Fastify({ logger: true });
 
@@ -43,6 +45,8 @@ await app.register(periodRoutes, { prefix: "/periods" });
 await app.register(recipeRoutes, { prefix: "/recipes" });
 await app.register(salesImportRoutes, { prefix: "/sales-imports" });
 await app.register(reportRoutes, { prefix: "/reports" });
+await app.register(categoryRoutes, { prefix: "/categories" });
+await app.register(settingsRoutes, { prefix: "/settings" });
 
 try {
   await app.listen({ port: env.API_PORT, host: "0.0.0.0" });

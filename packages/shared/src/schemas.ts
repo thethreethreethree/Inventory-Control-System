@@ -16,6 +16,7 @@ export const createItemSchema = z.object({
   baseUnitCode: z.string().min(1),
   brand: z.string().max(120).optional(),
   barcode: z.string().max(64).optional(),
+  categoryId: z.string().uuid().optional(),
 });
 export type CreateItemInput = z.infer<typeof createItemSchema>;
 
@@ -205,6 +206,48 @@ export const createRecipeSchema = z.object({
     .min(1),
 });
 export type CreateRecipeInput = z.infer<typeof createRecipeSchema>;
+
+// --- Settings & management --------------------------------------------------
+
+export interface AppSettings {
+  businessName: string;
+  currency: string;
+  defaultLocationId: string | null;
+  countTolerancePct: number;
+  allowNegativeStock: boolean;
+  requireApprovalForVariances: boolean;
+  tutorialEnabled: boolean; // click-based learning mode
+}
+
+export const DEFAULT_SETTINGS: AppSettings = {
+  businessName: "InvenTrack",
+  currency: "₱",
+  defaultLocationId: null,
+  countTolerancePct: 0,
+  allowNegativeStock: false,
+  requireApprovalForVariances: true,
+  tutorialEnabled: false,
+};
+
+export const updateSettingsSchema = z.object({
+  businessName: z.string().min(1).max(200).optional(),
+  currency: z.string().min(1).max(8).optional(),
+  defaultLocationId: z.string().uuid().nullable().optional(),
+  countTolerancePct: z.number().min(0).max(100).optional(),
+  allowNegativeStock: z.boolean().optional(),
+  requireApprovalForVariances: z.boolean().optional(),
+  tutorialEnabled: z.boolean().optional(),
+});
+export type UpdateSettingsInput = z.infer<typeof updateSettingsSchema>;
+
+export const createLocationSchema = z.object({
+  name: z.string().min(1).max(200),
+  type: z.enum(["store", "bar", "kitchen", "room_service", "spa", "other"]).optional(),
+});
+
+export const createCategorySchema = z.object({
+  name: z.string().min(1).max(200),
+});
 
 export const ingestSalesSchema = z.object({
   source: z.enum(["pos", "csv", "manual"]).optional(),

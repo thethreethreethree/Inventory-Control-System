@@ -1,7 +1,7 @@
 import { and, eq, gte, lte, sql } from "drizzle-orm";
 import type { MovementType } from "@ics/shared";
 import { db } from "../db/client";
-import { movements, periods } from "../db/schema";
+import { movements, orgs, periods } from "../db/schema";
 import { httpError } from "../lib/errors";
 
 /** A transaction handle (extracted from db.transaction's callback). */
@@ -50,6 +50,34 @@ export async function postMovement(tx: Tx, input: PostMovementInput) {
     .limit(1);
   if (locked.length > 0) {
     throw httpError("period is locked; cannot post a movement dated within it", 409);
+  }
+
+  // Accuracy guard: refuse a depletion that would drive on-hand below zero,
+  // unless the org explicitly allows negative stock (Settings).
+  if (input.signedBaseQty < 0) {
+    const [org] = await tx
+      .select({ settings: orgs.settings })
+      .from(orgs)
+      .where(eq(orgs.id, input.orgId))
+      .limit(1);
+    const allowNegative =
+      (org?.settings as Record<string, unknown> | undefined)?.allowNegativeStock === true;
+    if (!allowNegative) {
+      const res = await tx.execute(sql`
+        SELECT COALESCE(SUM(base_qty), 0)::float8 AS q
+        FROM movements
+        WHERE org_id = ${input.orgId}
+          AND item_id = ${input.itemId}
+          AND location_id = ${input.locationId}
+      `);
+      const current = Array.from(res as Iterable<{ q: number }>)[0]?.q ?? 0;
+      if (current + input.signedBaseQty < -1e-6) {
+        throw httpError(
+          `insufficient stock: ${current} on hand, cannot remove ${-input.signedBaseQty}`,
+          409,
+        );
+      }
+    }
   }
 
   const [movement] = await tx

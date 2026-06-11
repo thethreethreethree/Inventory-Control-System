@@ -59,6 +59,7 @@ export function Periods() {
     <>
       <PageHeader
         title="Periods"
+        learn="Close and lock a period once it's audited so no one can slip a backdated entry into it."
         subtitle="Locking a period blocks any backdated movement into its window."
       />
       <ErrorBanner error={err ?? periods.error} />

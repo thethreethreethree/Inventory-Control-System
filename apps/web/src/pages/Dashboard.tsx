@@ -13,6 +13,7 @@ export function Dashboard() {
     <>
       <PageHeader
         title="Dashboard"
+        learn="This overview is built from the ledger in real time — the balances are the running sum of every movement, never a typed number."
         subtitle="On-hand is derived from the ledger (SUM of movements) — never a stored number."
         actions={
           <Button
