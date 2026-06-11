@@ -1,0 +1,26 @@
+{
+  "name": "inventory-control-system",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "pnpm --parallel -r dev",
+    "dev:api": "pnpm --filter @ics/api dev",
+    "dev:web": "pnpm --filter @ics/web dev",
+    "build": "pnpm -r build",
+    "typecheck": "pnpm -r typecheck",
+    "db:up": "docker compose up -d db",
+    "db:down": "docker compose down",
+    "db:wait": "docker compose exec -T db pg_isready -U ics -d ics",
+    "db:generate": "pnpm --filter @ics/api db:generate",
+    "db:migrate": "pnpm --filter @ics/api db:migrate",
+    "db:seed": "pnpm --filter @ics/api db:seed",
+    "setup": "pnpm install && pnpm db:up && pnpm db:generate && pnpm db:migrate && pnpm db:seed"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2"
+  }
+}

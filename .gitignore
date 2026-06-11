@@ -1,10 +1,27 @@
-# For projects using Nanoc (http://nanoc.ws/)
+# Dependencies
+node_modules/
+.pnpm-store/
 
-# Default location for output (needs to match output_dir's value found in nanoc.yaml)
-output/
+# Build output
+dist/
+build/
+*.tsbuildinfo
 
-# Temporary file directory
-tmp/nanoc/
+# Env
+.env
+.env.local
+.env.*.local
 
-# Crash Log
-crash.log
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Editor / OS
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Drizzle local
+apps/api/drizzle/meta/_journal.lock

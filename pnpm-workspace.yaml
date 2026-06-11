@@ -1,0 +1,7 @@
+packages:
+  - "apps/*"
+  - "packages/*"
+
+# esbuild ships a platform binary via its install script; tsx + vite need it.
+allowBuilds:
+  esbuild: true
