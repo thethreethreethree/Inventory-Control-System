@@ -203,14 +203,16 @@ async function main() {
   ]);
 
   // --- locations ---
+  // The three real venues. Opening stock loads into HUB; transfer to the others.
   const locRows = await db
     .insert(locations)
     .values([
-      { orgId: orgId, name: "Main Store", type: "store" as const },
-      { orgId: orgId, name: "Bar", type: "bar" as const },
+      { orgId: orgId, name: "HUB", type: "bar" as const },
+      { orgId: orgId, name: "Frendz Saboria", type: "bar" as const },
+      { orgId: orgId, name: "Twinbeach", type: "bar" as const },
     ])
     .returning();
-  const mainStore = locRows.find((l) => l.name === "Main Store")!.id;
+  const mainStore = locRows.find((l) => l.name === "HUB")!.id;
 
   // --- categories ---
   const catNames = [...new Set(rows.map((r) => r.category || "Uncategorised"))];
@@ -302,7 +304,7 @@ async function main() {
   console.log("✓ Import complete");
   console.log(`  org:        Hub & Sky Bar`);
   console.log(`  items:      ${usedSku.size}`);
-  console.log(`  with stock: ${withStock} (opening receipts at Main Store)`);
+  console.log(`  with stock: ${withStock} (opening receipts at HUB)`);
   console.log(`  users:      admin@demo.local/admin123, manager@demo.local/manager123,`);
   console.log(`              purchaser@demo.local/purchaser123`);
   if (notes.length) {
