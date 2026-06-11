@@ -8,6 +8,7 @@ export function Reports() {
   const varianceR = useAsync(() => api.reportVariance());
   const reorder = useAsync(() => api.reportReorder());
   const expiry = useAsync(() => api.reportExpiry(30));
+  const lotsR = useAsync(() => api.reportLots());
 
   const totalValue = (valuation.data ?? []).reduce((s, r) => s + Number(r.value ?? 0), 0);
 
@@ -61,6 +62,40 @@ export function Reports() {
                 </tr>
               ))}
               {valuation.data && valuation.data.length === 0 && <EmptyRow cols={5} />}
+            </tbody>
+          </table>
+        )}
+      </Card>
+
+      <Card title="Lots on hand (FEFO order — earliest expiry consumed first)">
+        {lotsR.loading ? (
+          <Loading />
+        ) : (
+          <table className="tbl">
+            <thead>
+              <tr>
+                <th>SKU</th>
+                <th>Lot</th>
+                <th>Location</th>
+                <th>Expiry</th>
+                <th className="num">On hand</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {(lotsR.data ?? []).map((r, i) => (
+                <tr key={i}>
+                  <td>{String(r.sku)}</td>
+                  <td>{r.lot_no ? String(r.lot_no) : "—"}</td>
+                  <td>{String(r.location)}</td>
+                  <td>{r.expiry_date ? new Date(String(r.expiry_date)).toLocaleDateString() : "—"}</td>
+                  <td className="num">{fmt(r.on_hand as string)}</td>
+                  <td>{r.expired ? <Badge tone="bad">expired</Badge> : null}</td>
+                </tr>
+              ))}
+              {lotsR.data && lotsR.data.length === 0 && (
+                <EmptyRow cols={6} text="No lot-tracked stock yet (receive with a lot/expiry)." />
+              )}
             </tbody>
           </table>
         )}

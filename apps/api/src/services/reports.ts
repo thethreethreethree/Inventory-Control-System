@@ -58,23 +58,48 @@ export async function reorder(orgId: string) {
   return rows(res);
 }
 
-/** Received lots expiring within `days`. */
+/** Lots with remaining on-hand expiring within `days` (incl. already expired). */
 export async function expiry(orgId: string, days: number) {
   const res = await db.execute(sql`
     SELECT i.sku,
            i.name,
-           gl.lot_no,
-           gl.expiry_date,
-           gl.received_base_qty::text AS qty,
-           l.name AS location
-    FROM grn_lines gl
-    JOIN items i ON i.id = gl.item_id
-    JOIN goods_receipts gr ON gr.id = gl.grn_id
-    JOIN locations l ON l.id = gr.location_id
-    WHERE gl.org_id = ${orgId}
-      AND gl.expiry_date IS NOT NULL
-      AND gl.expiry_date <= now() + (${days} || ' days')::interval
-    ORDER BY gl.expiry_date ASC
+           l.lot_no,
+           l.expiry_date,
+           loc.name AS location,
+           COALESCE(SUM(m.base_qty), 0)::text AS qty,
+           (l.expiry_date < now()) AS expired
+    FROM lots l
+    JOIN items i ON i.id = l.item_id
+    JOIN locations loc ON loc.id = l.location_id
+    LEFT JOIN movements m ON m.lot_id = l.id
+    WHERE l.org_id = ${orgId}
+      AND l.expiry_date IS NOT NULL
+      AND l.expiry_date <= now() + (${days} || ' days')::interval
+    GROUP BY i.sku, i.name, l.lot_no, l.expiry_date, loc.name
+    HAVING COALESCE(SUM(m.base_qty), 0) > 0
+    ORDER BY l.expiry_date ASC
+  `);
+  return rows(res);
+}
+
+/** All lots with remaining on-hand (FEFO order). Proves lot-level tracking. */
+export async function lotsOnHand(orgId: string) {
+  const res = await db.execute(sql`
+    SELECT i.sku,
+           i.name,
+           l.lot_no,
+           l.expiry_date,
+           loc.name AS location,
+           COALESCE(SUM(m.base_qty), 0)::text AS on_hand,
+           (l.expiry_date IS NOT NULL AND l.expiry_date < now()) AS expired
+    FROM lots l
+    JOIN items i ON i.id = l.item_id
+    JOIN locations loc ON loc.id = l.location_id
+    LEFT JOIN movements m ON m.lot_id = l.id
+    WHERE l.org_id = ${orgId}
+    GROUP BY i.sku, i.name, l.lot_no, l.expiry_date, loc.name
+    HAVING COALESCE(SUM(m.base_qty), 0) > 0
+    ORDER BY l.expiry_date ASC NULLS LAST
   `);
   return rows(res);
 }

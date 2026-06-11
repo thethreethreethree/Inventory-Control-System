@@ -137,6 +137,7 @@ export const api = {
   reportVariance: () => get<Record<string, string | null>[]>("/reports/variance"),
   reportExpiry: (days = 30) => get<Record<string, string | null>[]>(`/reports/expiry?days=${days}`),
   reportActivity: () => get<Record<string, string | number | null>[]>("/reports/activity"),
+  reportLots: () => get<Record<string, string | boolean | null>[]>("/reports/lots"),
 };
 
 export interface CountVariance {

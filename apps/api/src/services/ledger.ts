@@ -21,6 +21,7 @@ export interface PostMovementInput {
   refType?: string | null;
   refId?: string | null;
   unitCost?: number | null;
+  lotId?: string | null;
 }
 
 /**
@@ -66,6 +67,7 @@ export async function postMovement(tx: Tx, input: PostMovementInput) {
       refType: input.refType ?? null,
       refId: input.refId ?? null,
       unitCost: input.unitCost != null ? input.unitCost.toString() : null,
+      lotId: input.lotId ?? null,
     })
     .returning();
 

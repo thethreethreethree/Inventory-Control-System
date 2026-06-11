@@ -702,6 +702,32 @@ export const salesLines = pgTable(
 );
 
 // ---------------------------------------------------------------------------
+// Lots / batches (FEFO — first-expiry-first-out)
+// ---------------------------------------------------------------------------
+// A lot is a received batch of an item at a location, with an expiry date. Its
+// on-hand is derived from movements tagged with its id; depletions consume the
+// earliest-expiring lot first.
+export const lots = pgTable(
+  "lots",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    orgId: uuid("org_id")
+      .notNull()
+      .references(() => orgs.id),
+    itemId: uuid("item_id")
+      .notNull()
+      .references(() => items.id),
+    locationId: uuid("location_id")
+      .notNull()
+      .references(() => locations.id),
+    lotNo: varchar("lot_no", { length: 80 }),
+    expiryDate: timestamp("expiry_date", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (t) => [index("lots_item_loc_idx").on(t.orgId, t.itemId, t.locationId)],
+);
+
+// ---------------------------------------------------------------------------
 // Audit log (who did what in the app — distinct from the ledger)
 // ---------------------------------------------------------------------------
 export const auditLog = pgTable(

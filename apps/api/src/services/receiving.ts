@@ -1,7 +1,7 @@
 import { eq, sql } from "drizzle-orm";
 import { db } from "../db/client";
 import { and } from "drizzle-orm";
-import { goodsReceipts, grnLines, poLines, purchaseOrders } from "../db/schema";
+import { goodsReceipts, grnLines, poLines, purchaseOrders, lots } from "../db/schema";
 import { httpError } from "../lib/errors";
 import { resolveUnitId, toBaseQty } from "../lib/units";
 import { postMovement } from "./ledger";
@@ -90,6 +90,22 @@ export async function receiveGoods(input: ReceiveGoodsInput) {
         condition: line.condition ?? "good",
       });
 
+      // Create a lot when a lot number or expiry is supplied (enables FEFO).
+      let lotId: string | null = null;
+      if (line.lotNo || line.expiryDate) {
+        const [lot] = await tx
+          .insert(lots)
+          .values({
+            orgId: input.orgId,
+            itemId: line.itemId,
+            locationId: input.locationId,
+            lotNo: line.lotNo ?? null,
+            expiryDate: line.expiryDate ? new Date(line.expiryDate) : null,
+          })
+          .returning();
+        lotId = lot?.id ?? null;
+      }
+
       await postMovement(tx, {
         orgId: input.orgId,
         itemId: line.itemId,
@@ -101,6 +117,7 @@ export async function receiveGoods(input: ReceiveGoodsInput) {
         refType: "grn",
         refId: grn.id,
         unitCost: line.unitCost ?? null,
+        lotId,
       });
 
       if (line.poLineId) {

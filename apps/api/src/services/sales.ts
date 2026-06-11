@@ -2,7 +2,7 @@ import { inArray } from "drizzle-orm";
 import { db } from "../db/client";
 import { salesImports, salesLines, recipeComponents } from "../db/schema";
 import { httpError } from "../lib/errors";
-import { postMovement } from "./ledger";
+import { depleteFEFO } from "../lib/fefo";
 
 type SalesSource = (typeof salesImports.$inferSelect)["source"];
 type RecipeComponent = typeof recipeComponents.$inferSelect;
@@ -66,11 +66,12 @@ export async function ingestSales(input: IngestSalesInput) {
 
       for (const c of byRecipe.get(line.recipeId) ?? []) {
         const deplete = line.qtySold * Number(c.baseQty);
-        await postMovement(tx, {
+        // FEFO: sales consume the earliest-expiring lots first.
+        await depleteFEFO(tx, {
           orgId: input.orgId,
           itemId: c.componentItemId,
           locationId: input.locationId,
-          signedBaseQty: -deplete,
+          qty: deplete,
           movementType: "issue",
           reasonCode: "sale",
           actorUserId: input.importedByUserId ?? null,

@@ -1,6 +1,6 @@
 import type { FastifyInstance } from "fastify";
 import { getCtx } from "../lib/auth";
-import { activity, expiry, reorder, valuation, variance } from "../services/reports";
+import { activity, expiry, lotsOnHand, reorder, valuation, variance } from "../services/reports";
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
@@ -8,6 +8,7 @@ export async function reportRoutes(app: FastifyInstance) {
   app.get("/valuation", async (req) => valuation(getCtx(req).orgId));
   app.get("/reorder", async (req) => reorder(getCtx(req).orgId));
   app.get("/variance", async (req) => variance(getCtx(req).orgId));
+  app.get("/lots", async (req) => lotsOnHand(getCtx(req).orgId));
 
   app.get("/expiry", async (req) => {
     const days = Number((req.query as { days?: string }).days ?? 30) || 30;

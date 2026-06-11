@@ -5,6 +5,7 @@ import { db } from "../db/client";
 import { movements, items, locations } from "../db/schema";
 import { getOrgContext } from "../lib/context";
 import { postMovement } from "../services/ledger";
+import { depleteFEFO } from "../lib/fefo";
 
 export async function movementRoutes(app: FastifyInstance) {
   // Record a stock movement. `qty` is a positive magnitude; the server derives
@@ -15,22 +16,39 @@ export async function movementRoutes(app: FastifyInstance) {
 
     const input = parsed.data;
     const { orgId, defaultUserId } = await getOrgContext();
-    const signedBaseQty = MOVEMENT_DELTA[input.movementType] * input.qty;
+    const actorUserId = input.actorUserId ?? defaultUserId;
+    const occurredAt = input.occurredAt ? new Date(input.occurredAt) : undefined;
 
-    const movement = await db.transaction((tx) =>
-      postMovement(tx, {
+    const result = await db.transaction(async (tx) => {
+      // Depletions consume earliest-expiry lots first (FEFO); receipts add stock.
+      if (MOVEMENT_DELTA[input.movementType] < 0) {
+        const allocations = await depleteFEFO(tx, {
+          orgId,
+          itemId: input.itemId,
+          locationId: input.locationId,
+          qty: input.qty,
+          movementType: input.movementType,
+          reasonCode: input.reasonCode ?? null,
+          actorUserId,
+          counterpartyUserId: input.counterpartyUserId ?? null,
+          occurredAt,
+        });
+        return { allocations };
+      }
+      const movement = await postMovement(tx, {
         orgId,
         itemId: input.itemId,
         locationId: input.locationId,
-        signedBaseQty,
+        signedBaseQty: input.qty,
         movementType: input.movementType,
         reasonCode: input.reasonCode ?? null,
-        occurredAt: input.occurredAt ? new Date(input.occurredAt) : undefined,
-        actorUserId: input.actorUserId ?? defaultUserId,
+        occurredAt,
+        actorUserId,
         counterpartyUserId: input.counterpartyUserId ?? null,
-      }),
-    );
-    return reply.code(201).send(movement);
+      });
+      return { movement };
+    });
+    return reply.code(201).send(result);
   });
 
   // Ledger view: recent movements, optionally filtered by item/location.
