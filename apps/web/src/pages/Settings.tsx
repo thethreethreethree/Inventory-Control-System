@@ -51,6 +51,21 @@ export function Settings() {
   const [locName, setLocName] = useState("");
   const [locType, setLocType] = useState("bar");
   const [catName, setCatName] = useState("");
+
+  // change password
+  const [pw, setPw] = useState({ current: "", next: "" });
+  const [pwMsg, setPwMsg] = useState<string | null>(null);
+  async function changePw(e: FormEvent) {
+    e.preventDefault();
+    setPwMsg(null);
+    try {
+      await api.changePassword({ currentPassword: pw.current, newPassword: pw.next });
+      setPw({ current: "", next: "" });
+      setPwMsg("Password changed.");
+    } catch (e) {
+      setPwMsg(e instanceof Error ? e.message : "Failed to change password");
+    }
+  }
   async function addLoc(e: FormEvent) {
     e.preventDefault();
     setErr(null);
@@ -223,6 +238,33 @@ export function Settings() {
           </table>
         </Card>
       </div>
+
+      <Card title="My account">
+        <form onSubmit={changePw}>
+          <div className="form-row">
+            <Field label="Current password">
+              <Input
+                type="password"
+                value={pw.current}
+                onChange={(e) => setPw({ ...pw, current: e.target.value })}
+                required
+              />
+            </Field>
+            <Field label="New password (min 6)">
+              <Input
+                type="password"
+                value={pw.next}
+                onChange={(e) => setPw({ ...pw, next: e.target.value })}
+                required
+              />
+            </Field>
+            <Button type="submit" variant="ghost">
+              Change password
+            </Button>
+          </div>
+        </form>
+        {pwMsg && <p className="hint">{pwMsg}</p>}
+      </Card>
 
       <Card title="Users & roles">
         <table className="tbl">

@@ -36,20 +36,21 @@ pnpm install          # install all workspaces
 pnpm db:up            # start PostgreSQL in Docker
 pnpm db:generate      # generate SQL migrations from the Drizzle schema
 pnpm db:migrate       # apply migrations
-pnpm db:seed          # seed demo org, admin, units, items, opening receipts
+pnpm db:import        # load Hub & Sky Bar inventory + team accounts/roles
 pnpm dev              # run api (:4000) + web (:5173) together
 ```
 
 Or, after `pnpm db:up` is running, the one-shot:
 
 ```bash
-pnpm setup            # install + db:up + generate + migrate + seed
+pnpm setup            # install + db:up + generate + migrate + import + team
 ```
 
 Then open http://localhost:5173 — the dashboard shows on-hand balances **derived from the
 ledger** plus the item master.
 
-Demo login: `admin@demo.local` / `admin123`.
+Login: `maria.anna@hubsky.local` / `maria123` (Admin). Staff (Nikko/Jason) may only enter
+inventory counts.
 
 ## Useful scripts
 
@@ -59,7 +60,8 @@ Demo login: `admin@demo.local` / `admin123`.
 | `pnpm dev:api` / `pnpm dev:web` | one at a time |
 | `pnpm db:up` / `pnpm db:down` | start / stop Postgres |
 | `pnpm db:generate` | regenerate migrations after a schema change |
-| `pnpm db:migrate` / `pnpm db:seed` | apply migrations / seed |
+| `pnpm db:migrate` | apply migrations |
+| `pnpm db:import` / `pnpm db:team` | load inventory + team / re-sync team |
 | `pnpm typecheck` | typecheck all workspaces |
 
 ## API endpoints (current scaffold)

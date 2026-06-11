@@ -185,9 +185,19 @@ async function main() {
     if (u && roleId) await db.insert(userRoles).values({ userId: u.id, roleId });
     return u;
   }
-  const admin = await makeUser("Admin", "admin@demo.local", "admin123", "Admin");
-  await makeUser("Manager", "manager@demo.local", "manager123", "Manager");
-  await makeUser("Purchaser", "purchaser@demo.local", "purchaser123", "Purchaser");
+  const TEAM: { name: string; email: string; pw: string; role: SystemRole }[] = [
+    { name: "Maria Anna", email: "maria.anna@hubsky.local", pw: "maria123", role: "Admin" },
+    { name: "Bredily", email: "bredily@hubsky.local", pw: "bredily123", role: "Admin" },
+    { name: "Remy", email: "remy@hubsky.local", pw: "remy123", role: "Admin" },
+    { name: "Malou", email: "malou@hubsky.local", pw: "malou123", role: "Admin" },
+    { name: "Nikko", email: "nikko@hubsky.local", pw: "nikko123", role: "Staff" },
+    { name: "Jason", email: "jason@hubsky.local", pw: "jason123", role: "Staff" },
+  ];
+  let admin: typeof users.$inferSelect | undefined;
+  for (const t of TEAM) {
+    const u = await makeUser(t.name, t.email, t.pw, t.role);
+    if (t.email === "maria.anna@hubsky.local") admin = u;
+  }
   if (!admin) throw new Error("failed to create admin");
 
   // --- units + global conversions ---
@@ -305,8 +315,8 @@ async function main() {
   console.log(`  org:        Hub & Sky Bar`);
   console.log(`  items:      ${usedSku.size}`);
   console.log(`  with stock: ${withStock} (opening receipts at FRENDZ&HUB)`);
-  console.log(`  users:      admin@demo.local/admin123, manager@demo.local/manager123,`);
-  console.log(`              purchaser@demo.local/purchaser123`);
+  console.log(`  users:      Maria Anna/Bredily/Remy/Malou (Admin), Nikko/Jason (Staff)`);
+  console.log(`              login e.g. maria.anna@hubsky.local / maria123`);
   if (notes.length) {
     console.log(`  notes (${notes.length} parsing assumptions):`);
     for (const n of notes) console.log(`    - ${n}`);

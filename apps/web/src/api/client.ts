@@ -90,6 +90,8 @@ export const api = {
       password,
     }),
   me: () => get<{ user: { id: string; name: string }; permissions: string[] }>("/auth/me"),
+  changePassword: (b: { currentPassword: string; newPassword: string }) =>
+    put<{ ok: boolean }>("/auth/password", b),
 
   // reference data
   balances: () => get<Balance[]>("/balances"),

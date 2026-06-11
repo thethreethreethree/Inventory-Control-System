@@ -1,9 +1,9 @@
 import type { FastifyInstance } from "fastify";
 import { eq } from "drizzle-orm";
-import { loginSchema } from "@ics/shared";
+import { changePasswordSchema, loginSchema } from "@ics/shared";
 import { db } from "../db/client";
 import { users } from "../db/schema";
-import { verifyPassword } from "../lib/password";
+import { hashPassword, verifyPassword } from "../lib/password";
 import { signToken } from "../lib/token";
 import { getCtx } from "../lib/auth";
 
@@ -36,5 +36,21 @@ export async function authRoutes(app: FastifyInstance) {
       user: { id: ctx.userId, name: ctx.userName },
       permissions: [...ctx.permissions],
     };
+  });
+
+  // Change your own password.
+  app.put("/password", async (req, reply) => {
+    const parsed = changePasswordSchema.safeParse(req.body);
+    if (!parsed.success) return reply.code(400).send({ error: parsed.error.flatten() });
+    const ctx = getCtx(req);
+    const [user] = await db.select().from(users).where(eq(users.id, ctx.userId)).limit(1);
+    if (!user || !verifyPassword(parsed.data.currentPassword, user.passwordHash)) {
+      return reply.code(401).send({ error: "current password is incorrect" });
+    }
+    await db
+      .update(users)
+      .set({ passwordHash: hashPassword(parsed.data.newPassword) })
+      .where(eq(users.id, ctx.userId));
+    return { ok: true };
   });
 }

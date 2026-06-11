@@ -17,9 +17,9 @@
     "db:wait": "docker compose exec -T db pg_isready -U ics -d ics",
     "db:generate": "pnpm --filter @ics/api db:generate",
     "db:migrate": "pnpm --filter @ics/api db:migrate",
-    "db:seed": "pnpm --filter @ics/api db:seed",
     "db:import": "pnpm --filter @ics/api db:import",
-    "setup": "pnpm install && pnpm db:up && pnpm db:generate && pnpm db:migrate && pnpm db:seed"
+    "db:team": "pnpm --filter @ics/api db:team",
+    "setup": "pnpm install && pnpm db:up && pnpm db:generate && pnpm db:migrate && pnpm db:import && pnpm db:team"
   },
   "devDependencies": {
     "typescript": "^5.7.2"
