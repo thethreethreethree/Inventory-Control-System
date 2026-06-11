@@ -39,7 +39,9 @@ export const ROLE_PERMISSIONS: Record<SystemRole, Permission[] | "*"> = {
   Admin: "*",
   Purchaser: ["item.read", "movement.read", "po.create"],
   Receiver: ["item.read", "movement.read", "grn.confirm", "transfer.confirm"],
-  Staff: ["item.read", "movement.read", "movement.create", "transfer.create", "count.create"],
+  // Staff may only perform inventory count ENTRY (create/submit counts).
+  // Posting a count for variance still requires a Manager (count.post).
+  Staff: ["item.read", "movement.read", "count.create"],
   Auditor: ["item.read", "movement.read", "audit.read", "count.create"],
   Manager: [
     "item.read",
