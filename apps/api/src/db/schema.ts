@@ -627,6 +627,81 @@ export const periods = pgTable("periods", {
 });
 
 // ---------------------------------------------------------------------------
+// Recipes & sales ingestion (hybrid depletion: sales -> recipe -> issue)
+// ---------------------------------------------------------------------------
+export const salesSource = pgEnum("sales_source", ["pos", "csv", "manual"]);
+
+// A pour spec / recipe: 1 serving of the sold item consumes these components.
+export const recipes = pgTable("recipes", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  orgId: uuid("org_id")
+    .notNull()
+    .references(() => orgs.id),
+  name: varchar("name", { length: 200 }).notNull(),
+  soldItemId: uuid("sold_item_id").references(() => items.id),
+  yieldQty: numeric("yield_qty", { precision: 12, scale: 4 }).default("1").notNull(),
+  version: integer("version").default(1).notNull(),
+  active: boolean("active").default(true).notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+});
+
+export const recipeComponents = pgTable(
+  "recipe_components",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    orgId: uuid("org_id")
+      .notNull()
+      .references(() => orgs.id),
+    recipeId: uuid("recipe_id")
+      .notNull()
+      .references(() => recipes.id),
+    componentItemId: uuid("component_item_id")
+      .notNull()
+      .references(() => items.id),
+    qty: numeric("qty", { precision: 20, scale: 4 }).notNull(),
+    unitId: uuid("unit_id")
+      .notNull()
+      .references(() => units.id),
+    baseQty: numeric("base_qty", { precision: 20, scale: 4 }).notNull(), // per serving, base units
+  },
+  (t) => [index("recipe_components_recipe_idx").on(t.recipeId)],
+);
+
+export const salesImports = pgTable("sales_imports", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  orgId: uuid("org_id")
+    .notNull()
+    .references(() => orgs.id),
+  source: salesSource("source").default("manual").notNull(),
+  locationId: uuid("location_id")
+    .notNull()
+    .references(() => locations.id),
+  reference: varchar("reference", { length: 60 }),
+  importedByUserId: uuid("imported_by_user_id").references(() => users.id),
+  importedAt: timestamp("imported_at", { withTimezone: true }).defaultNow().notNull(),
+  note: text("note"),
+});
+
+export const salesLines = pgTable(
+  "sales_lines",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    orgId: uuid("org_id")
+      .notNull()
+      .references(() => orgs.id),
+    salesImportId: uuid("sales_import_id")
+      .notNull()
+      .references(() => salesImports.id),
+    recipeId: uuid("recipe_id")
+      .notNull()
+      .references(() => recipes.id),
+    qtySold: numeric("qty_sold", { precision: 20, scale: 4 }).notNull(),
+    soldAt: timestamp("sold_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (t) => [index("sales_lines_import_idx").on(t.salesImportId)],
+);
+
+// ---------------------------------------------------------------------------
 // Audit log (who did what in the app — distinct from the ledger)
 // ---------------------------------------------------------------------------
 export const auditLog = pgTable(

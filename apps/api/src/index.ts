@@ -16,6 +16,8 @@ import { invoiceRoutes } from "./routes/invoices";
 import { countRoutes } from "./routes/counts";
 import { adjustmentRoutes } from "./routes/adjustments";
 import { periodRoutes } from "./routes/periods";
+import { recipeRoutes } from "./routes/recipes";
+import { salesImportRoutes } from "./routes/salesImports";
 
 const app = Fastify({ logger: true });
 
@@ -35,6 +37,8 @@ await app.register(invoiceRoutes, { prefix: "/invoices" });
 await app.register(countRoutes, { prefix: "/counts" });
 await app.register(adjustmentRoutes, { prefix: "/adjustments" });
 await app.register(periodRoutes, { prefix: "/periods" });
+await app.register(recipeRoutes, { prefix: "/recipes" });
+await app.register(salesImportRoutes, { prefix: "/sales-imports" });
 
 try {
   await app.listen({ port: env.API_PORT, host: "0.0.0.0" });

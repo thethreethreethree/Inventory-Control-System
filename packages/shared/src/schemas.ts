@@ -187,3 +187,38 @@ export const closePeriodSchema = z.object({
   closedByUserId: z.string().uuid().optional(),
   lock: z.boolean().optional(),
 });
+
+// --- Recipes & sales ingestion (hybrid depletion) ---------------------------
+
+export const createRecipeSchema = z.object({
+  name: z.string().min(1).max(200),
+  soldItemId: z.string().uuid().optional(),
+  yieldQty: z.number().positive().optional(),
+  components: z
+    .array(
+      z.object({
+        itemId: z.string().uuid(),
+        qty: z.number().positive(),
+        unitCode: z.string().min(1),
+      }),
+    )
+    .min(1),
+});
+export type CreateRecipeInput = z.infer<typeof createRecipeSchema>;
+
+export const ingestSalesSchema = z.object({
+  source: z.enum(["pos", "csv", "manual"]).optional(),
+  locationId: z.string().uuid(),
+  importedByUserId: z.string().uuid().optional(),
+  reference: z.string().max(60).optional(),
+  lines: z
+    .array(
+      z.object({
+        recipeId: z.string().uuid(),
+        qtySold: z.number().positive(),
+        soldAt: z.string().datetime().optional(),
+      }),
+    )
+    .min(1),
+});
+export type IngestSalesInput = z.infer<typeof ingestSalesSchema>;
