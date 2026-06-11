@@ -207,12 +207,12 @@ async function main() {
   const locRows = await db
     .insert(locations)
     .values([
-      { orgId: orgId, name: "HUB", type: "bar" as const },
-      { orgId: orgId, name: "Frendz Saboria", type: "bar" as const },
+      { orgId: orgId, name: "FRENDZ&HUB", type: "bar" as const },
+      { orgId: orgId, name: "Saboria", type: "bar" as const },
       { orgId: orgId, name: "Twinbeach", type: "bar" as const },
     ])
     .returning();
-  const mainStore = locRows.find((l) => l.name === "HUB")!.id;
+  const mainStore = locRows.find((l) => l.name === "FRENDZ&HUB")!.id;
 
   // --- categories ---
   const catNames = [...new Set(rows.map((r) => r.category || "Uncategorised"))];
@@ -304,7 +304,7 @@ async function main() {
   console.log("✓ Import complete");
   console.log(`  org:        Hub & Sky Bar`);
   console.log(`  items:      ${usedSku.size}`);
-  console.log(`  with stock: ${withStock} (opening receipts at HUB)`);
+  console.log(`  with stock: ${withStock} (opening receipts at FRENDZ&HUB)`);
   console.log(`  users:      admin@demo.local/admin123, manager@demo.local/manager123,`);
   console.log(`              purchaser@demo.local/purchaser123`);
   if (notes.length) {
