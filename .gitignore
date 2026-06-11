@@ -25,3 +25,6 @@ pnpm-debug.log*
 
 # Drizzle local
 apps/api/drizzle/meta/_journal.lock
+
+# Uploaded receipt images
+apps/api/uploads/

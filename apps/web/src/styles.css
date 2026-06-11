@@ -628,3 +628,44 @@ body.learn-on [data-learn]:hover {
   line-height: 1;
   cursor: pointer;
 }
+
+/* receipt scanner --------------------------------------------------------- */
+.filebtn {
+  display: inline-block;
+  padding: 0.5rem 0.95rem;
+  border: 1px dashed var(--brand);
+  border-radius: 8px;
+  background: #f3f8fd;
+  color: var(--brand);
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.filebtn input {
+  display: none;
+}
+.receipt-preview {
+  display: block;
+  max-height: 200px;
+  margin-top: 0.75rem;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+}
+.scan-progress {
+  margin-top: 0.75rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+.scan-progress .bar {
+  height: 6px;
+  background: var(--line);
+  border-radius: 99px;
+  overflow: hidden;
+  margin-top: 0.3rem;
+}
+.scan-progress .bar span {
+  display: block;
+  height: 100%;
+  background: var(--brand);
+  transition: width 0.2s;
+}

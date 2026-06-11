@@ -71,6 +71,7 @@ export function setupAuth(app: FastifyInstance) {
   // Authenticate + authorize every request (global hook on the root instance).
   app.addHook("onRequest", async (req, reply) => {
     if (req.method === "OPTIONS") return; // CORS preflight
+    if (req.url.startsWith("/uploads/")) return; // served images (capability URLs)
     const url = req.routeOptions?.url ?? req.url;
     if (PUBLIC.has(url)) return;
 

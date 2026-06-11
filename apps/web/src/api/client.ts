@@ -161,6 +161,28 @@ export const api = {
   createCategory: (b: unknown) => post<Category>("/categories", b),
   createLocation: (b: unknown) => post<Location>("/locations", b),
   createItem: (b: unknown) => post<Item>("/items", b),
+
+  // file upload (multipart)
+  uploadAttachment: async (file: File): Promise<{ id: string; url: string }> => {
+    const fd = new FormData();
+    fd.append("file", file);
+    const token = getAuthToken();
+    const res = await fetch("/api/attachments", {
+      method: "POST",
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+      body: fd,
+    });
+    if (res.status === 401) {
+      clearAuthToken();
+      window.location.reload();
+    }
+    const text = await res.text();
+    const data = text ? JSON.parse(text) : null;
+    if (!res.ok) {
+      throw new ApiError(res.status, (data && data.error) || "upload failed", data);
+    }
+    return data as { id: string; url: string };
+  },
 };
 
 export interface CountVariance {

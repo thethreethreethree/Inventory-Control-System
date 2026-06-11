@@ -2,7 +2,7 @@ import type { FastifyInstance } from "fastify";
 import { desc, eq } from "drizzle-orm";
 import { recordInvoiceSchema } from "@ics/shared";
 import { db } from "../db/client";
-import { supplierInvoices } from "../db/schema";
+import { supplierInvoices, attachments } from "../db/schema";
 import { getOrgContext } from "../lib/context";
 import { statusOf } from "../lib/errors";
 import { recordInvoice, matchInvoice } from "../services/invoicing";
@@ -22,6 +22,7 @@ export async function invoiceRoutes(app: FastifyInstance) {
         invoiceNo: parsed.data.invoiceNo,
         amount: parsed.data.amount,
         invoiceDate: parsed.data.invoiceDate ?? null,
+        attachmentId: parsed.data.attachmentId ?? null,
       });
       return reply.code(201).send(invoice);
     } catch (err) {
@@ -42,8 +43,19 @@ export async function invoiceRoutes(app: FastifyInstance) {
   app.get("/", async () => {
     const { orgId } = await getOrgContext();
     return db
-      .select()
+      .select({
+        id: supplierInvoices.id,
+        supplierId: supplierInvoices.supplierId,
+        poId: supplierInvoices.poId,
+        invoiceNo: supplierInvoices.invoiceNo,
+        amount: supplierInvoices.amount,
+        matchStatus: supplierInvoices.matchStatus,
+        matchDetail: supplierInvoices.matchDetail,
+        attachmentId: supplierInvoices.attachmentId,
+        attachmentUrl: attachments.fileUrl,
+      })
       .from(supplierInvoices)
+      .leftJoin(attachments, eq(attachments.id, supplierInvoices.attachmentId))
       .where(eq(supplierInvoices.orgId, orgId))
       .orderBy(desc(supplierInvoices.createdAt));
   });

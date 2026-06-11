@@ -1,7 +1,10 @@
 import Fastify from "fastify";
 import cors from "@fastify/cors";
+import multipart from "@fastify/multipart";
+import fastifyStatic from "@fastify/static";
 import { env } from "./env";
 import { setupAuth } from "./lib/auth";
+import { attachmentRoutes, UPLOAD_DIR } from "./routes/attachments";
 import { healthRoutes } from "./routes/health";
 import { authRoutes } from "./routes/auth";
 import { itemRoutes } from "./routes/items";
@@ -27,6 +30,8 @@ const app = Fastify({ logger: true });
 
 await app.register(cors, { origin: true });
 setupAuth(app);
+await app.register(multipart, { limits: { fileSize: 12 * 1024 * 1024 } });
+await app.register(fastifyStatic, { root: UPLOAD_DIR, prefix: "/uploads/" });
 await app.register(healthRoutes);
 await app.register(authRoutes, { prefix: "/auth" });
 await app.register(userRoutes, { prefix: "/users" });
@@ -47,6 +52,7 @@ await app.register(salesImportRoutes, { prefix: "/sales-imports" });
 await app.register(reportRoutes, { prefix: "/reports" });
 await app.register(categoryRoutes, { prefix: "/categories" });
 await app.register(settingsRoutes, { prefix: "/settings" });
+await app.register(attachmentRoutes, { prefix: "/attachments" });
 
 try {
   await app.listen({ port: env.API_PORT, host: "0.0.0.0" });

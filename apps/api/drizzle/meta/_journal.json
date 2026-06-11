@@ -43,6 +43,13 @@
       "when": 1781208468596,
       "tag": "0005_rare_wolfsbane",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1781213080455,
+      "tag": "0006_lumpy_lionheart",
+      "breakpoints": true
     }
   ]
 }

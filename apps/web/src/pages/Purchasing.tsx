@@ -2,6 +2,7 @@ import { useState, type FormEvent } from "react";
 import { api } from "../api/client";
 import { useAsync } from "../lib/useAsync";
 import { useActingUser } from "../lib/actingUser";
+import { ReceiptScanner } from "../components/ReceiptScanner";
 import {
   Badge,
   Button,
@@ -245,6 +246,12 @@ export function Purchasing() {
         )}
       </Card>
 
+      <ReceiptScanner
+        suppliers={suppliers.data ?? []}
+        pos={pos.data ?? []}
+        onSaved={() => invoices.reload()}
+      />
+
       <div className="grid2">
         <Card title="Receive goods (GRN)">
           <form onSubmit={receive}>
@@ -343,6 +350,7 @@ export function Purchasing() {
                 <th>Invoice</th>
                 <th className="num">Amount</th>
                 <th>Match</th>
+                <th>Receipt</th>
               </tr>
             </thead>
             <tbody>
@@ -359,9 +367,18 @@ export function Purchasing() {
                       </span>
                     )}
                   </td>
+                  <td>
+                    {inv.attachmentUrl ? (
+                      <a href={`/api${inv.attachmentUrl}`} target="_blank" rel="noreferrer">
+                        📎 view
+                      </a>
+                    ) : (
+                      "—"
+                    )}
+                  </td>
                 </tr>
               ))}
-              {invoices.data && invoices.data.length === 0 && <EmptyRow cols={3} />}
+              {invoices.data && invoices.data.length === 0 && <EmptyRow cols={4} />}
             </tbody>
           </table>
         </Card>

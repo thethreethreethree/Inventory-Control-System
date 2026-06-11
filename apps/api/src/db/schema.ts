@@ -749,3 +749,23 @@ export const auditLog = pgTable(
   },
   (t) => [index("audit_org_time_idx").on(t.orgId, t.occurredAt)],
 );
+
+// ---------------------------------------------------------------------------
+// Attachments (uploaded files — e.g. scanned vendor receipts)
+// ---------------------------------------------------------------------------
+export const attachments = pgTable(
+  "attachments",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    orgId: uuid("org_id")
+      .notNull()
+      .references(() => orgs.id),
+    entityType: varchar("entity_type", { length: 40 }), // e.g. "receipt"
+    entityId: uuid("entity_id"),
+    fileUrl: text("file_url").notNull(),
+    sha256: varchar("sha256", { length: 64 }),
+    uploadedBy: uuid("uploaded_by").references(() => users.id),
+    uploadedAt: timestamp("uploaded_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (t) => [index("attachments_org_idx").on(t.orgId, t.entityType)],
+);

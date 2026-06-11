@@ -10,6 +10,7 @@ export interface RecordInvoiceInput {
   invoiceNo: string;
   amount: number;
   invoiceDate?: string | null;
+  attachmentId?: string | null;
 }
 
 const round = (n: number) => Math.round(n * 100) / 100;
@@ -25,6 +26,7 @@ export async function recordInvoice(input: RecordInvoiceInput) {
       invoiceNo: input.invoiceNo,
       amount: input.amount.toString(),
       invoiceDate: input.invoiceDate ? new Date(input.invoiceDate) : null,
+      attachmentId: input.attachmentId ?? null,
     })
     .returning();
   if (!invoice) throw httpError("failed to record invoice", 500);

@@ -131,6 +131,7 @@ export const recordInvoiceSchema = z.object({
   invoiceNo: z.string().min(1).max(80),
   amount: z.number().nonnegative(),
   invoiceDate: z.string().datetime().optional(),
+  attachmentId: z.string().uuid().optional(),
 });
 export type RecordInvoiceInput = z.infer<typeof recordInvoiceSchema>;
 

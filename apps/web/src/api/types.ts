@@ -85,6 +85,8 @@ export interface Invoice {
   amount: string;
   matchStatus: string;
   matchDetail: Record<string, number> | null;
+  attachmentId?: string | null;
+  attachmentUrl?: string | null;
 }
 export interface Count {
   id: string;
