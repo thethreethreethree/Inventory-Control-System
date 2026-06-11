@@ -28,12 +28,28 @@ export class ApiError extends Error {
   }
 }
 
+const TOKEN_KEY = "ics_token";
+export const getAuthToken = () => localStorage.getItem(TOKEN_KEY);
+export const setAuthToken = (t: string) => localStorage.setItem(TOKEN_KEY, t);
+export const clearAuthToken = () => localStorage.removeItem(TOKEN_KEY);
+
 async function req<T>(method: string, path: string, body?: unknown): Promise<T> {
+  const headers: Record<string, string> = {};
+  if (body !== undefined) headers["Content-Type"] = "application/json";
+  const token = getAuthToken();
+  if (token) headers["Authorization"] = `Bearer ${token}`;
+
   const res = await fetch(`/api${path}`, {
     method,
-    headers: body !== undefined ? { "Content-Type": "application/json" } : undefined,
+    headers,
     body: body !== undefined ? JSON.stringify(body) : undefined,
   });
+
+  // An expired/invalid session anywhere (except the login call) bounces to login.
+  if (res.status === 401 && path !== "/auth/login") {
+    clearAuthToken();
+    window.location.reload();
+  }
   const text = await res.text();
   const data = text ? JSON.parse(text) : null;
   if (!res.ok) {
@@ -52,6 +68,14 @@ const get = <T>(path: string) => req<T>("GET", path);
 const post = <T>(path: string, body?: unknown) => req<T>("POST", path, body ?? {});
 
 export const api = {
+  // auth
+  login: (email: string, password: string) =>
+    post<{ token: string; user: { id: string; name: string; email: string } }>("/auth/login", {
+      email,
+      password,
+    }),
+  me: () => get<{ user: { id: string; name: string }; permissions: string[] }>("/auth/me"),
+
   // reference data
   balances: () => get<Balance[]>("/balances"),
   balancesCache: () => get<Balance[]>("/balances/cache"),

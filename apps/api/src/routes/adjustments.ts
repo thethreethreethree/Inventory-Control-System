@@ -4,6 +4,7 @@ import { createAdjustmentSchema, reviewAdjustmentSchema } from "@ics/shared";
 import { db } from "../db/client";
 import { adjustments } from "../db/schema";
 import { getOrgContext } from "../lib/context";
+import { getCtx } from "../lib/auth";
 import { statusOf } from "../lib/errors";
 import { createAdjustment, approveAdjustment, rejectAdjustment } from "../services/adjustments";
 
@@ -35,9 +36,10 @@ export async function adjustmentRoutes(app: FastifyInstance) {
     const parsed = reviewAdjustmentSchema.safeParse(req.body ?? {});
     if (!parsed.success) return reply.code(400).send({ error: parsed.error.flatten() });
     const { id } = req.params as { id: string };
-    const { orgId, defaultUserId } = await getOrgContext();
+    const { orgId } = await getOrgContext();
     try {
-      return await approveAdjustment(orgId, id, parsed.data.reviewedByUserId ?? defaultUserId);
+      // Reviewer is the authenticated user (separation of duties is tamper-proof).
+      return await approveAdjustment(orgId, id, getCtx(req).userId);
     } catch (err) {
       return reply.code(statusOf(err)).send({ error: (err as Error).message });
     }
@@ -47,14 +49,9 @@ export async function adjustmentRoutes(app: FastifyInstance) {
     const parsed = reviewAdjustmentSchema.safeParse(req.body ?? {});
     if (!parsed.success) return reply.code(400).send({ error: parsed.error.flatten() });
     const { id } = req.params as { id: string };
-    const { orgId, defaultUserId } = await getOrgContext();
+    const { orgId } = await getOrgContext();
     try {
-      return await rejectAdjustment(
-        orgId,
-        id,
-        parsed.data.reviewedByUserId ?? defaultUserId,
-        parsed.data.note ?? null,
-      );
+      return await rejectAdjustment(orgId, id, getCtx(req).userId, parsed.data.note ?? null);
     } catch (err) {
       return reply.code(statusOf(err)).send({ error: (err as Error).message });
     }

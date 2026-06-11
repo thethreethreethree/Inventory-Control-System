@@ -1,6 +1,7 @@
 import Fastify from "fastify";
 import cors from "@fastify/cors";
 import { env } from "./env";
+import { setupAuth } from "./lib/auth";
 import { healthRoutes } from "./routes/health";
 import { authRoutes } from "./routes/auth";
 import { itemRoutes } from "./routes/items";
@@ -22,6 +23,7 @@ import { salesImportRoutes } from "./routes/salesImports";
 const app = Fastify({ logger: true });
 
 await app.register(cors, { origin: true });
+setupAuth(app);
 await app.register(healthRoutes);
 await app.register(authRoutes, { prefix: "/auth" });
 await app.register(userRoutes, { prefix: "/users" });

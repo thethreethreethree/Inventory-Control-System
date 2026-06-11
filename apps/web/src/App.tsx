@@ -16,7 +16,7 @@ const NAV = [
 
 export function App() {
   const [db, setDb] = useState<"up" | "down" | "…">("…");
-  const { users, userId, setUserId } = useActingUser();
+  const { user, logout } = useActingUser();
 
   useEffect(() => {
     const tick = () =>
@@ -48,19 +48,11 @@ export function App() {
           ))}
         </nav>
         <div className="acting-as">
-          <span className="acting-label">Acting as</span>
-          <select
-            className="acting-select"
-            value={userId ?? ""}
-            onChange={(e) => setUserId(e.target.value)}
-          >
-            {users.length === 0 && <option value="">…</option>}
-            {users.map((u) => (
-              <option key={u.id} value={u.id}>
-                {u.name}
-              </option>
-            ))}
-          </select>
+          <span className="acting-label">Signed in as</span>
+          <div className="user-name">{user?.name}</div>
+          <button className="btn ghost sm block" onClick={logout}>
+            Sign out
+          </button>
         </div>
         <div className="sidebar-foot">
           <span className={`dot ${db === "up" ? "ok" : db === "down" ? "bad" : ""}`} />

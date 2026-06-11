@@ -21,4 +21,6 @@ export const env = {
   ),
   API_PORT: Number(process.env.API_PORT ?? 4000),
   NODE_ENV: process.env.NODE_ENV ?? "development",
+  // Dev default; set a strong value in production.
+  AUTH_SECRET: required("AUTH_SECRET", "dev-only-change-me-secret"),
 };

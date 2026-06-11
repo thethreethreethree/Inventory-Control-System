@@ -4,6 +4,7 @@ import { createCountSchema, submitCountLinesSchema, postCountSchema } from "@ics
 import { db } from "../db/client";
 import { stockCounts, countLines } from "../db/schema";
 import { getOrgContext } from "../lib/context";
+import { getCtx } from "../lib/auth";
 import { statusOf } from "../lib/errors";
 import { createCount, submitCountLines, postCount } from "../services/counts";
 
@@ -44,9 +45,10 @@ export async function countRoutes(app: FastifyInstance) {
     const parsed = postCountSchema.safeParse(req.body ?? {});
     if (!parsed.success) return reply.code(400).send({ error: parsed.error.flatten() });
     const { id } = req.params as { id: string };
-    const { orgId, defaultUserId } = await getOrgContext();
+    const { orgId } = await getOrgContext();
     try {
-      return await postCount(orgId, id, parsed.data.postedByUserId ?? defaultUserId);
+      // Poster is the authenticated user; a different user must approve the variance.
+      return await postCount(orgId, id, getCtx(req).userId);
     } catch (err) {
       return reply.code(statusOf(err)).send({ error: (err as Error).message });
     }

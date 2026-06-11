@@ -4,6 +4,7 @@ import { createPurchaseOrderSchema, approvePurchaseOrderSchema } from "@ics/shar
 import { db } from "../db/client";
 import { purchaseOrders, poLines } from "../db/schema";
 import { getOrgContext } from "../lib/context";
+import { getCtx } from "../lib/auth";
 import { statusOf } from "../lib/errors";
 import { createPurchaseOrder, approvePurchaseOrder } from "../services/purchasing";
 
@@ -35,9 +36,10 @@ export async function purchaseOrderRoutes(app: FastifyInstance) {
     if (!parsed.success) return reply.code(400).send({ error: parsed.error.flatten() });
 
     const { id } = req.params as { id: string };
-    const { orgId, defaultUserId } = await getOrgContext();
+    const { orgId } = await getOrgContext();
     try {
-      return await approvePurchaseOrder(orgId, id, parsed.data.approvedByUserId ?? defaultUserId);
+      // Approver is the authenticated user — not client-supplied (tamper-proof).
+      return await approvePurchaseOrder(orgId, id, getCtx(req).userId);
     } catch (err) {
       return reply.code(statusOf(err)).send({ error: (err as Error).message });
     }

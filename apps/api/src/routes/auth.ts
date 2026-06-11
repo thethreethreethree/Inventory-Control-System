@@ -4,6 +4,8 @@ import { loginSchema } from "@ics/shared";
 import { db } from "../db/client";
 import { users } from "../db/schema";
 import { verifyPassword } from "../lib/password";
+import { signToken } from "../lib/token";
+import { getCtx } from "../lib/auth";
 
 export async function authRoutes(app: FastifyInstance) {
   app.post("/login", async (req, reply) => {
@@ -17,15 +19,22 @@ export async function authRoutes(app: FastifyInstance) {
       .where(eq(users.email, parsed.data.email))
       .limit(1);
 
-    if (!user || !verifyPassword(parsed.data.password, user.passwordHash)) {
+    if (!user || user.status !== "active" || !verifyPassword(parsed.data.password, user.passwordHash)) {
       return reply.code(401).send({ error: "Invalid credentials" });
     }
 
-    // Stub token. Real session/JWT with permission claims + audit logging of the
-    // login event comes in the auth phase (SYSTEM_DESIGN sect. 3, module 11).
     return {
-      token: `dev.${user.id}`,
+      token: signToken({ userId: user.id }),
       user: { id: user.id, name: user.name, email: user.email },
+    };
+  });
+
+  // Current session: who am I and what may I do.
+  app.get("/me", async (req) => {
+    const ctx = getCtx(req);
+    return {
+      user: { id: ctx.userId, name: ctx.userName },
+      permissions: [...ctx.permissions],
     };
   });
 }
