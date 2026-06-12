@@ -669,3 +669,15 @@ body.learn-on [data-learn]:hover {
   background: var(--brand);
   transition: width 0.2s;
 }
+.cost-cell {
+  background: none;
+  border: none;
+  color: var(--brand);
+  cursor: pointer;
+  font: inherit;
+  font-variant-numeric: tabular-nums;
+  padding: 0;
+}
+.cost-cell:hover {
+  text-decoration: underline;
+}

@@ -163,6 +163,8 @@ export const api = {
   createCategory: (b: unknown) => post<Category>("/categories", b),
   createLocation: (b: unknown) => post<Location>("/locations", b),
   createItem: (b: unknown) => post<Item>("/items", b),
+  setItemCost: (id: string, b: { cost: number; unitCode: string }) =>
+    put<{ ok: boolean; costPerBase: number }>(`/items/${id}/cost`, b),
 
   // file upload (multipart)
   uploadAttachment: async (file: File): Promise<{ id: string; url: string }> => {

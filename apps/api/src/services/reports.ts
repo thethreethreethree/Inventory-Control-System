@@ -23,17 +23,26 @@ export async function valuation(orgId: string) {
            i.name,
            u.code AS unit,
            COALESCE(SUM(sb.base_qty), 0)::text AS on_hand,
-           CASE WHEN c.total_base > 0
-                THEN round(c.total_value / c.total_base, 6)::text END AS avg_cost_per_base,
-           CASE WHEN c.total_base > 0
-                THEN round(COALESCE(SUM(sb.base_qty), 0) * c.total_value / c.total_base, 2)::text END AS value
+           COALESCE(
+             CASE WHEN c.total_base > 0 THEN round(c.total_value / c.total_base, 6) END,
+             i.default_cost
+           )::text AS avg_cost_per_base,
+           CASE
+             WHEN c.total_base > 0
+               THEN round(COALESCE(SUM(sb.base_qty), 0) * c.total_value / c.total_base, 2)::text
+             WHEN i.default_cost IS NOT NULL
+               THEN round(COALESCE(SUM(sb.base_qty), 0) * i.default_cost, 2)::text
+           END AS value
     FROM items i
     JOIN units u ON u.id = i.base_unit_id
     LEFT JOIN stock_balances sb ON sb.item_id = i.id AND sb.org_id = i.org_id
     LEFT JOIN cost c ON c.item_id = i.id
     WHERE i.org_id = ${orgId}
-    GROUP BY i.sku, i.name, u.code, c.total_value, c.total_base
-    ORDER BY value DESC NULLS LAST
+    GROUP BY i.sku, i.name, u.code, c.total_value, c.total_base, i.default_cost
+    ORDER BY
+      COALESCE(SUM(sb.base_qty), 0)
+      * COALESCE(CASE WHEN c.total_base > 0 THEN c.total_value / c.total_base END, i.default_cost)
+      DESC NULLS LAST
   `);
   return rows(res);
 }

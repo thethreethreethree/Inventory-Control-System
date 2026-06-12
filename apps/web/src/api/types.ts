@@ -17,6 +17,9 @@ export interface Item {
   category?: string | null;
   unit?: string | null;
   on_hand?: string | null;
+  default_cost?: string | null; // per base unit
+  stock_unit?: string | null;
+  stock_unit_base?: string | null; // base units per 1 stock unit
 }
 export interface Location {
   id: string;

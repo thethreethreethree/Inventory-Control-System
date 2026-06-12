@@ -30,6 +30,26 @@ export function Items() {
   const [f, setF] = useState(blank);
   const [addErr, setAddErr] = useState<string | null>(null);
 
+  // inline cost editing (cost shown/entered per the item's stock unit)
+  const [editId, setEditId] = useState<string | null>(null);
+  const [editCost, setEditCost] = useState("");
+  const unitForCost = (i: { stock_unit?: string | null; unit?: string | null }) =>
+    i.stock_unit ?? i.unit ?? "each";
+  const basePerUnit = (i: { stock_unit_base?: string | null }) =>
+    i.stock_unit_base ? Number(i.stock_unit_base) : 1;
+  const costPerUnit = (i: { default_cost?: string | null; stock_unit_base?: string | null }) =>
+    i.default_cost != null ? Number(i.default_cost) * basePerUnit(i) : null;
+  async function saveCost(i: { id: string; stock_unit?: string | null; unit?: string | null }) {
+    setAddErr(null);
+    try {
+      await api.setItemCost(i.id, { cost: Number(editCost) || 0, unitCode: unitForCost(i) });
+      setEditId(null);
+      await reload();
+    } catch (e) {
+      setAddErr(e instanceof Error ? e.message : String(e));
+    }
+  }
+
   async function addItem(e: FormEvent) {
     e.preventDefault();
     setAddErr(null);
@@ -153,6 +173,7 @@ export function Items() {
                 <th>Type</th>
                 <th className="num">On hand</th>
                 <th>Unit</th>
+                <th className="num">Cost</th>
                 <th>Status</th>
               </tr>
             </thead>
@@ -165,12 +186,43 @@ export function Items() {
                   <td className="muted">{i.itemType}</td>
                   <td className="num">{fmt(i.on_hand)}</td>
                   <td>{i.unit ?? "—"}</td>
+                  <td className="num">
+                    {editId === i.id ? (
+                      <span className="row gap" style={{ justifyContent: "flex-end" }}>
+                        <Input
+                          type="number"
+                          step="any"
+                          value={editCost}
+                          onChange={(e) => setEditCost(e.target.value)}
+                          style={{ width: "90px" }}
+                          autoFocus
+                        />
+                        <Button className="sm" onClick={() => saveCost(i)}>
+                          ✓
+                        </Button>
+                        <Button variant="ghost" className="sm" onClick={() => setEditId(null)}>
+                          ×
+                        </Button>
+                      </span>
+                    ) : (
+                      <button
+                        className="cost-cell"
+                        onClick={() => {
+                          setEditId(i.id);
+                          setEditCost(costPerUnit(i) != null ? String(costPerUnit(i)) : "");
+                        }}
+                        title={`Set cost per ${unitForCost(i)}`}
+                      >
+                        {costPerUnit(i) != null ? `${fmt(costPerUnit(i))} /${unitForCost(i)}` : "set"}
+                      </button>
+                    )}
+                  </td>
                   <td>
                     <Badge tone={statusTone(i.status)}>{i.status}</Badge>
                   </td>
                 </tr>
               ))}
-              {filtered.length === 0 && <EmptyRow cols={7} text="No matching items." />}
+              {filtered.length === 0 && <EmptyRow cols={8} text="No matching items." />}
             </tbody>
           </table>
         )}

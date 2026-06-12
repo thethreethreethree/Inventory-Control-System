@@ -204,6 +204,7 @@ export const items = pgTable(
     stockUnitId: uuid("stock_unit_id").references(() => units.id),
     purchaseUnitId: uuid("purchase_unit_id").references(() => units.id),
     costMethod: varchar("cost_method", { length: 20 }).default("moving_avg").notNull(),
+    defaultCost: numeric("default_cost", { precision: 14, scale: 6 }), // fallback cost per BASE unit
     parLevel: numeric("par_level", { precision: 20, scale: 4 }),
     reorderPoint: numeric("reorder_point", { precision: 20, scale: 4 }),
     reorderQty: numeric("reorder_qty", { precision: 20, scale: 4 }),
