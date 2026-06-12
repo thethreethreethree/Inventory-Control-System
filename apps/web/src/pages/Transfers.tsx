@@ -66,6 +66,7 @@ export function Transfers() {
       <PageHeader
         title="Transfers"
         learn="Create a transfer to send stock to another venue; it stays 'in transit' until the receiving side confirms it — so nothing disappears mid-move."
+        learnTl="Gumawa ng transfer para magpadala ng stock sa ibang lokasyon; 'in transit' muna ito hanggang i-confirm ng tatanggap — para walang mawala sa daan."
         subtitle="Stock leaves the source now; the destination is credited only when the receiver confirms."
       />
       <ErrorBanner error={err ?? transfers.error} />

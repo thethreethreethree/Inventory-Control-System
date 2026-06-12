@@ -136,6 +136,7 @@ export function ReceiptScanner({
       <p
         className="hint"
         data-learn="Upload or photograph a supplier receipt. The system reads it (OCR), pre-fills the invoice fields below for you to verify, then saves the invoice with the photo attached — which feeds the 3-way match."
+        data-learn-tl="Mag-upload o kumuha ng litrato ng resibo. Babasahin ito ng sistema (OCR), pupunan ang invoice fields sa baba para i-verify mo, tapos ise-save ang invoice kasama ang litrato — na sasali sa 3-way match."
       >
         Upload or photograph the receipt — we'll read it and pre-fill the fields for you to check.
       </p>

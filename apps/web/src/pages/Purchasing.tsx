@@ -135,6 +135,7 @@ export function Purchasing() {
       <PageHeader
         title="Purchasing"
         learn="Run the buying cycle here: raise a purchase order, receive the goods (which adds stock), then match the supplier invoice against what was ordered and received."
+        learnTl="Dito ang buong proseso ng pagbili: gumawa ng purchase order, tanggapin ang goods (dinadagdag sa stock), tapos i-match ang invoice sa na-order at natanggap."
         subtitle="PO → GRN → Invoice, 3-way matched. Approving a PO requires a different user than its creator."
       />
       <ErrorBanner error={err} />

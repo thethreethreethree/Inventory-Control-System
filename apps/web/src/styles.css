@@ -681,3 +681,20 @@ body.learn-on [data-learn]:hover {
 .cost-cell:hover {
   text-decoration: underline;
 }
+.learn-pop-actions {
+  margin-top: 0.55rem;
+}
+.learn-continue {
+  background: var(--brand);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.3rem 0.75rem;
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.learn-continue:hover {
+  background: var(--brand-hover);
+}

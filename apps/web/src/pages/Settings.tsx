@@ -95,6 +95,7 @@ export function Settings() {
         title="Settings"
         subtitle="Configure the business, accuracy guards, learning mode, locations and categories."
         learn="The Settings page configures how the whole system behaves — your business name and currency, the accuracy guards that keep inventory exact, the learning mode you're using now, plus your locations and categories."
+        learnTl="Dito iko-configure kung paano kumikilos ang buong sistema — pangalan ng business at currency, ang accuracy guards na nagpapanatili ng tamang inventory, ang learning mode na ginagamit mo ngayon, at mga lokasyon at kategorya."
       />
       <ErrorBanner error={err ?? loaded.error} />
       {saved && <div className="notice">Settings saved.</div>}
@@ -131,6 +132,7 @@ export function Settings() {
             <label
               className="toggle"
               data-learn="When ON, the ledger refuses any issue, sale or transfer that would push stock below zero at a location — you can never remove what isn't there. Turn off only if you intentionally allow negative balances."
+              data-learn-tl="Kapag ON, tinatanggihan ng ledger ang anumang issue, sale o transfer na magpapababa ng stock sa zero sa isang lokasyon — hindi mo pwedeng alisin ang wala. I-off lang kung sadyang pinapayagan ang negative."
             >
               <input
                 type="checkbox"
@@ -142,6 +144,7 @@ export function Settings() {
             <label
               className="toggle"
               data-learn="When ON, every count variance must be approved by a manager before stock is corrected. When OFF, variances within tolerance can post automatically."
+              data-learn-tl="Kapag ON, kailangang aprubahan ng manager ang bawat count variance bago maitama ang stock. Kapag OFF, pwedeng automatic ang nasa loob ng tolerance."
             >
               <input
                 type="checkbox"
@@ -165,6 +168,7 @@ export function Settings() {
             <label
               className="toggle"
               data-learn="This is the switch for the click-based learning system. With it ON, key elements across every page highlight, and clicking one explains what it does instead of performing the action."
+              data-learn-tl="Ito ang switch para sa click-to-learn. Kapag ON, magha-highlight ang mga elemento sa bawat page, at kapag kino-click, ipapaliwanag kung ano ito — tapos i-click ang 'Magpatuloy' para gawin ang aksyon."
             >
               <input
                 type="checkbox"

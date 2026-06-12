@@ -87,6 +87,7 @@ export function Items() {
       <PageHeader
         title="Items"
         learn="Browse the full item master. Use search and the category filter to find any product and see its current on-hand. Admins can add new items here."
+        learnTl="Tingnan ang buong item master. Gamitin ang search at category filter para hanapin ang item at makita ang on-hand. Pwedeng magdagdag ng item ang admin dito."
         subtitle={`Item master — ${data?.length ?? 0} items`}
         actions={
           <Button variant="ghost" onClick={() => setShowAdd((s) => !s)}>

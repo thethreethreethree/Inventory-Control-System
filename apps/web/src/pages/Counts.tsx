@@ -86,6 +86,7 @@ export function Counts() {
       <PageHeader
         title="Counts"
         learn="Start a count, key in what you physically have, then Post — the difference vs the system's figure becomes a variance to approve. The count itself never changes stock."
+        learnTl="Magsimula ng count, ilagay ang aktwal na bilang, tapos i-Post — ang pagkakaiba sa records ay magiging variance na aaprubahan. Hindi binabago ng count mismo ang stock."
         subtitle="A blind stocktake. Posting compares counted vs theoretical and raises adjustments for the variance — it never changes stock directly."
       />
       <ErrorBanner error={err ?? counts.error} />
