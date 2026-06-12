@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 240" width="760" height="240"><defs><clipPath id="lc"><circle cx="104" cy="120" r="44"/></clipPath><clipPath id="gR"><rect x="120" y="0" width="120" height="120"/></clipPath>
+<style>.wm{font-family:'Arial Black',Arial,sans-serif;font-weight:900;letter-spacing:1px}.tag{font-family:Arial,sans-serif;font-weight:700;letter-spacing:3px}</style></defs>
+<rect width="760" height="240" fill="#0B2D50"/>
+<g>
+  <path fill="#FFFFFF" d="M99.13 42.77 L98.38 20.32 L141.62 20.32 L140.87 42.77 L148.51 45.25 L161.10 26.65 L196.09 52.07 L182.28 69.78 L187.00 76.29 L208.12 68.63 L221.49 109.76 L199.90 115.98 L199.90 124.02 L221.49 130.24 L208.12 171.37 L187.00 163.71 L182.28 170.22 L196.09 187.93 L161.10 213.35 L148.51 194.75 L140.87 197.23 L141.62 219.68 L98.38 219.68 L99.13 197.23 L91.49 194.75 L78.90 213.35 L43.91 187.93 L57.72 170.22 L53.00 163.71 L31.88 171.37 L18.51 130.24 L40.10 124.02 L40.10 115.98 L18.51 109.76 L31.88 68.63 L53.00 76.29 L57.72 69.78 L43.91 52.07 L78.90 26.65 L91.49 45.25 Z"/>
+  <g clip-path="url(#gR)"><path fill="#7FB0E0" d="M99.13 42.77 L98.38 20.32 L141.62 20.32 L140.87 42.77 L148.51 45.25 L161.10 26.65 L196.09 52.07 L182.28 69.78 L187.00 76.29 L208.12 68.63 L221.49 109.76 L199.90 115.98 L199.90 124.02 L221.49 130.24 L208.12 171.37 L187.00 163.71 L182.28 170.22 L196.09 187.93 L161.10 213.35 L148.51 194.75 L140.87 197.23 L141.62 219.68 L98.38 219.68 L99.13 197.23 L91.49 194.75 L78.90 213.35 L43.91 187.93 L57.72 170.22 L53.00 163.71 L31.88 171.37 L18.51 130.24 L40.10 124.02 L40.10 115.98 L18.51 109.76 L31.88 68.63 L53.00 76.29 L57.72 69.78 L43.91 52.07 L78.90 26.65 L91.49 45.25 Z"/></g>
+  <circle fill="#0B2D50" cx="120" cy="120" r="58"/>
+  <circle cx="104" cy="120" r="50" fill="#0B2D50"/>
+  <circle cx="104" cy="120" r="44" fill="#0B2D50"/>
+  <g clip-path="url(#lc)">
+    <g><path fill="#5A92CC" d="M96,92 l14,-7 l14,7 l-14,7 Z"/><path fill="#3D6FA8" d="M96,92 l14,7 l0,16 l-14,-7 Z"/><path fill="#0B2D50" d="M110,99 l14,-7 l0,16 l-14,7 Z"/></g>
+    <g><path fill="#5A92CC" d="M80,116 l13,-6.5 l13,6.5 l-13,6.5 Z"/><path fill="#3D6FA8" d="M80,116 l13,6.5 l0,15 l-13,-6.5 Z"/><path fill="#0B2D50" d="M93,122.5 l13,-6.5 l0,15 l-13,6.5 Z"/></g>
+  </g>
+  <rect x="139" y="151" width="13" height="42" rx="6.5" transform="rotate(-45 145.5 172)" fill="#0B2D50"/>
+  <circle cx="150" cy="98" r="22" fill="#0B2D50"/>
+  <circle cx="150" cy="98" r="19" fill="#7FB0E0"/>
+  <path d="M141 98 l6 7 l12 -14" fill="none" stroke="#0B2D50" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></g>
+<text x="262" y="112" class="wm" fill="#FFFFFF" font-size="58">INVENTRACK</text>
+<text x="262" y="170" class="wm" fill="#FFFFFF" font-size="58">SOLUTIONS</text>
+<text x="264" y="202" class="tag" fill="#AFC8E0" font-size="19">CONTROL<tspan fill="#7FB0E0">.</tspan> TRACK<tspan fill="#7FB0E0">.</tspan> OPTIMIZE<tspan fill="#7FB0E0">.</tspan></text>
+</svg>

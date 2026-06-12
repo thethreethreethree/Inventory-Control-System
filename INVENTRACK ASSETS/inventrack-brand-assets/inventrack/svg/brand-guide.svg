@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1700" width="1200" height="1700" font-family="Arial,sans-serif">
+  <defs>
+    <clipPath id="lcG"><circle cx="104" cy="120" r="44"/></clipPath>
+    <clipPath id="gRG"><rect x="120" y="0" width="120" height="120"/></clipPath>
+  </defs>
+  <rect width="1200" height="1700" fill="#FFFFFF"/>
+  <rect width="1200" height="150" fill="#0B2D50"/>
+  <text x="64" y="74" fill="#FFFFFF" font-size="42" font-weight="900" letter-spacing="1">INVENTRACK SOLUTIONS</text>
+  <text x="64" y="112" fill="#7FB0E0" font-size="22" font-weight="700" letter-spacing="4">BRAND GUIDELINES</text>
+
+  <!-- PRIMARY LOGO -->
+  <text x="64" y="220" fill="#0B2D50" font-size="24" font-weight="900" letter-spacing="2">PRIMARY LOGO</text>
+  <line x1="64" y1="234" x2="1136" y2="234" stroke="#E2E6EA" stroke-width="2"/>
+  <g transform="translate(64,260) scale(0.95)">
+    <!-- embed horizontal -->
+    <g transform="scale(1)">
+      <use href="#hlogo"/>
+    </g>
+  </g>
+
+  <!-- COLOR PALETTE -->
+  <text x="64" y="620" fill="#0B2D50" font-size="24" font-weight="900" letter-spacing="2">COLOR PALETTE</text>
+  <line x1="64" y1="634" x2="1136" y2="634" stroke="#E2E6EA" stroke-width="2"/>
+  <g font-size="15" font-weight="700">
+    <rect x="64"  y="660" width="200" height="120" rx="8" fill="#0B2D50"/>
+    <text x="80" y="810" fill="#0B2D50">Deep Navy</text><text x="80" y="832" fill="#7A828A" font-weight="400">#0B2D50 · 11,45,80</text>
+    <rect x="288" y="660" width="200" height="120" rx="8" fill="#1E4D7B"/>
+    <text x="304" y="810" fill="#0B2D50">Steel Blue</text><text x="304" y="832" fill="#7A828A" font-weight="400">#1E4D7B · 30,77,123</text>
+    <rect x="512" y="660" width="200" height="120" rx="8" fill="#2E6DB4"/>
+    <text x="528" y="810" fill="#0B2D50">Track Blue</text><text x="528" y="832" fill="#7A828A" font-weight="400">#2E6DB4 · 46,109,180</text>
+    <rect x="736" y="660" width="200" height="120" rx="8" fill="#0A0A0A"/>
+    <text x="752" y="810" fill="#0B2D50">Ink Black</text><text x="752" y="832" fill="#7A828A" font-weight="400">#0A0A0A · 10,10,10</text>
+    <rect x="960" y="660" width="176" height="120" rx="8" fill="#FFFFFF" stroke="#E2E6EA" stroke-width="2"/>
+    <text x="976" y="810" fill="#0B2D50">Paper White</text><text x="976" y="832" fill="#7A828A" font-weight="400">#FFFFFF · 255,255,255</text>
+  </g>
+
+  <!-- TYPOGRAPHY -->
+  <text x="64" y="910" fill="#0B2D50" font-size="24" font-weight="900" letter-spacing="2">TYPOGRAPHY</text>
+  <line x1="64" y1="924" x2="1136" y2="924" stroke="#E2E6EA" stroke-width="2"/>
+  <text x="64" y="975" fill="#0B2D50" font-size="48" font-weight="900">Wordmark — Heavy Grotesque</text>
+  <text x="64" y="1005" fill="#7A828A" font-size="16">Arial Black / Montserrat ExtraBold — all caps, +1 tracking. Use for the logotype and major headings.</text>
+  <text x="64" y="1060" fill="#0B2D50" font-size="30" font-weight="700">Body &amp; UI — Clean Sans</text>
+  <text x="64" y="1088" fill="#7A828A" font-size="16">Arial / Inter / Open Sans — sentence case for product copy, labels, and data tables.</text>
+  <text x="64" y="1135" fill="#0A0A0A" font-size="18" font-weight="700" letter-spacing="3">TAGLINE · CONTROL.  TRACK.  OPTIMIZE.  — caps, +3 tracking, periods in Track Blue</text>
+
+  <!-- USAGE -->
+  <text x="64" y="1215" fill="#0B2D50" font-size="24" font-weight="900" letter-spacing="2">CLEAR SPACE &amp; MINIMUM SIZE</text>
+  <line x1="64" y1="1229" x2="1136" y2="1229" stroke="#E2E6EA" stroke-width="2"/>
+  <g transform="translate(64,1255)">
+    <rect x="0" y="0" width="300" height="200" fill="#F4F6F8" stroke="#CDD4DA" stroke-dasharray="6 6"/>
+    <g transform="translate(80,30) scale(0.58)"><use href="#iconG"/></g>
+    <text x="150" y="185" text-anchor="middle" fill="#7A828A" font-size="14">Clear space = height of the gear hub on all sides</text>
+  </g>
+  <g transform="translate(420,1255)" font-size="15" fill="#0B2D50">
+    <text x="0" y="20" font-weight="700">Minimum sizes</text>
+    <text x="0" y="50" fill="#5A636B">• Full horizontal lockup: 140px / 38mm wide</text>
+    <text x="0" y="76" fill="#5A636B">• Icon only: 24px (digital), 10mm (print)</text>
+    <text x="0" y="102" fill="#5A636B">• Favicon mark: optimized down to 16px</text>
+    <text x="0" y="150" font-weight="700">Don'ts</text>
+    <text x="0" y="180" fill="#5A636B">• Don't recolor, stretch, rotate, or add effects</text>
+    <text x="0" y="206" fill="#5A636B">• Don't place the full-color mark on busy photos —</text>
+    <text x="0" y="228" fill="#5A636B">  use the reversed or mono lockup instead</text>
+  </g>
+
+  <text x="64" y="1660" fill="#AEB6BD" font-size="13">InvenTrack Solutions — visual identity system · generated asset package</text>
+
+  <!-- DEFS: reusable icon + horizontal logo -->
+  <defs>
+    <g id="iconG">
+      <path fill="#0A0A0A" d="M99.13 42.77 L98.38 20.32 L141.62 20.32 L140.87 42.77 L148.51 45.25 L161.10 26.65 L196.09 52.07 L182.28 69.78 L187.00 76.29 L208.12 68.63 L221.49 109.76 L199.90 115.98 L199.90 124.02 L221.49 130.24 L208.12 171.37 L187.00 163.71 L182.28 170.22 L196.09 187.93 L161.10 213.35 L148.51 194.75 L140.87 197.23 L141.62 219.68 L98.38 219.68 L99.13 197.23 L91.49 194.75 L78.90 213.35 L43.91 187.93 L57.72 170.22 L53.00 163.71 L31.88 171.37 L18.51 130.24 L40.10 124.02 L40.10 115.98 L18.51 109.76 L31.88 68.63 L53.00 76.29 L57.72 69.78 L43.91 52.07 L78.90 26.65 L91.49 45.25 Z"/>
+      <g clip-path="url(#gRG)"><path fill="#1E4D7B" d="M99.13 42.77 L98.38 20.32 L141.62 20.32 L140.87 42.77 L148.51 45.25 L161.10 26.65 L196.09 52.07 L182.28 69.78 L187.00 76.29 L208.12 68.63 L221.49 109.76 L199.90 115.98 L199.90 124.02 L221.49 130.24 L208.12 171.37 L187.00 163.71 L182.28 170.22 L196.09 187.93 L161.10 213.35 L148.51 194.75 L140.87 197.23 L141.62 219.68 L98.38 219.68 L99.13 197.23 L91.49 194.75 L78.90 213.35 L43.91 187.93 L57.72 170.22 L53.00 163.71 L31.88 171.37 L18.51 130.24 L40.10 124.02 L40.10 115.98 L18.51 109.76 L31.88 68.63 L53.00 76.29 L57.72 69.78 L43.91 52.07 L78.90 26.65 L91.49 45.25 Z"/></g>
+      <circle fill="#FFFFFF" cx="120" cy="120" r="58"/>
+      <circle cx="104" cy="120" r="50" fill="#0B2D50"/><circle cx="104" cy="120" r="44" fill="#FFFFFF"/>
+      <g clip-path="url(#lcG)">
+        <g><path fill="#2E6DB4" d="M96,92 l14,-7 l14,7 l-14,7 Z"/><path fill="#1E4D7B" d="M96,92 l14,7 l0,16 l-14,-7 Z"/><path fill="#0B2D50" d="M110,99 l14,-7 l0,16 l-14,7 Z"/></g>
+        <g><path fill="#2E6DB4" d="M80,116 l13,-6.5 l13,6.5 l-13,6.5 Z"/><path fill="#1E4D7B" d="M80,116 l13,6.5 l0,15 l-13,-6.5 Z"/><path fill="#0B2D50" d="M93,122.5 l13,-6.5 l0,15 l-13,6.5 Z"/></g>
+      </g>
+      <rect x="139" y="151" width="13" height="42" rx="6.5" transform="rotate(-45 145.5 172)" fill="#0B2D50"/>
+      <circle cx="150" cy="98" r="22" fill="#FFFFFF"/><circle cx="150" cy="98" r="19" fill="#1E4D7B"/>
+      <path d="M141 98 l6 7 l12 -14" fill="none" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+    <g id="hlogo">
+      <use href="#iconG"/>
+      <text x="262" y="112" font-size="58" font-weight="900" fill="#0B2D50" letter-spacing="1">INVENTRACK</text>
+      <text x="262" y="170" font-size="58" font-weight="900" fill="#0B2D50" letter-spacing="1">SOLUTIONS</text>
+      <text x="264" y="202" font-size="19" font-weight="700" fill="#0A0A0A" letter-spacing="3">CONTROL<tspan fill="#2E6DB4">.</tspan> TRACK<tspan fill="#2E6DB4">.</tspan> OPTIMIZE<tspan fill="#2E6DB4">.</tspan></text>
+    </g>
+  </defs>
+</svg>

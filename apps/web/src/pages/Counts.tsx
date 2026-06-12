@@ -85,8 +85,20 @@ export function Counts() {
     <>
       <PageHeader
         title="Counts"
-        learn="Start a count, key in what you physically have, then Post — the difference vs the system's figure becomes a variance to approve. The count itself never changes stock."
-        learnTl="Magsimula ng count, ilagay ang aktwal na bilang, tapos i-Post — ang pagkakaiba sa records ay magiging variance na aaprubahan. Hindi binabago ng count mismo ang stock."
+        learn={`Counts — running a stocktake step by step
+
+1. Under "New count", pick the location and how big the count is (a quick daily spot-check, weekly, or a full monthly count), then Start.
+2. For each item, enter the quantity you physically counted and its unit, and Add it.
+3. When finished, a manager clicks "Post count".
+
+Posting compares your counted numbers to what the system expected and shows the "variance" (the difference). Any real gap becomes an adjustment for a second person to approve — the count itself never moves stock.`}
+        learnTl={`Counts — hakbang-hakbang na stocktake
+
+1. Sa "New count", piliin ang lokasyon at gaano kalaki (mabilis na daily spot, weekly, o buong monthly), tapos Start.
+2. Kada item, ilagay ang aktwal na nabilang at ang unit, tapos Add.
+3. Pagtapos, pipindutin ng manager ang "Post count".
+
+Kapag na-post, ikinukumpara ang bilang mo sa inaasahan ng sistema at ipinapakita ang "variance" (pagkakaiba). Ang tunay na gap ay magiging adjustment na aaprubahan ng pangalawang tao — hindi mismo ang count ang gumagalaw ng stock.`}
         subtitle="A blind stocktake. Posting compares counted vs theoretical and raises adjustments for the variance — it never changes stock directly."
       />
       <ErrorBanner error={err ?? counts.error} />

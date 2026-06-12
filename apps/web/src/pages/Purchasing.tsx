@@ -134,8 +134,24 @@ export function Purchasing() {
     <>
       <PageHeader
         title="Purchasing"
-        learn="Run the buying cycle here: raise a purchase order, receive the goods (which adds stock), then match the supplier invoice against what was ordered and received."
-        learnTl="Dito ang buong proseso ng pagbili: gumawa ng purchase order, tanggapin ang goods (dinadagdag sa stock), tapos i-match ang invoice sa na-order at natanggap."
+        learn={`Purchasing — from order to payment
+
+Work top to bottom:
+1. Add a Supplier (who you buy from).
+2. Create a Purchase Order — the item, quantity, unit and price you are ordering. A second person Approves it.
+3. Receive goods (GRN) when they arrive — this is what actually adds stock. You can scan a photo of the delivery receipt to fill it in.
+4. Record the supplier's Invoice.
+
+The system then "3-way matches" ordered vs received vs billed and flags any mismatch — so you never overpay or accept short deliveries.`}
+        learnTl={`Purchasing — mula order hanggang bayad
+
+Sundan pababa:
+1. Magdagdag ng Supplier (kung kanino bumibili).
+2. Gumawa ng Purchase Order — item, dami, unit at presyong ino-order. Pangalawang tao ang mag-a-approve.
+3. Receive goods (GRN) pagdating — ito ang aktwal na nagdadagdag ng stock. Pwedeng i-scan ang litrato ng resibo para mapunan.
+4. Itala ang Invoice ng supplier.
+
+Saka "3-way match" ng sistema ang in-order vs natanggap vs siningil at tatatakan ang mismatch — para hindi ka sobrang magbayad o tumanggap ng kulang.`}
         subtitle="PO → GRN → Invoice, 3-way matched. Approving a PO requires a different user than its creator."
       />
       <ErrorBanner error={err} />

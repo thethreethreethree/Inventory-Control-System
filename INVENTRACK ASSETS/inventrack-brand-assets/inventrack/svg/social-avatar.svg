@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512"><defs><clipPath id="lc"><circle cx="104" cy="120" r="44"/></clipPath><clipPath id="gR"><rect x="120" y="0" width="120" height="120"/></clipPath>
+<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0B2D50"/><stop offset="1" stop-color="#143A63"/></linearGradient></defs>
+<rect width="512" height="512" fill="url(#bg)"/>
+<circle cx="256" cy="256" r="190" fill="#FFFFFF" opacity="0.04"/>
+<g transform="translate(136,128) scale(1.0)">
+  <path fill="#0A0A0A" d="M99.13 42.77 L98.38 20.32 L141.62 20.32 L140.87 42.77 L148.51 45.25 L161.10 26.65 L196.09 52.07 L182.28 69.78 L187.00 76.29 L208.12 68.63 L221.49 109.76 L199.90 115.98 L199.90 124.02 L221.49 130.24 L208.12 171.37 L187.00 163.71 L182.28 170.22 L196.09 187.93 L161.10 213.35 L148.51 194.75 L140.87 197.23 L141.62 219.68 L98.38 219.68 L99.13 197.23 L91.49 194.75 L78.90 213.35 L43.91 187.93 L57.72 170.22 L53.00 163.71 L31.88 171.37 L18.51 130.24 L40.10 124.02 L40.10 115.98 L18.51 109.76 L31.88 68.63 L53.00 76.29 L57.72 69.78 L43.91 52.07 L78.90 26.65 L91.49 45.25 Z"/>
+  <g clip-path="url(#gR)"><path fill="#2E6DB4" d="M99.13 42.77 L98.38 20.32 L141.62 20.32 L140.87 42.77 L148.51 45.25 L161.10 26.65 L196.09 52.07 L182.28 69.78 L187.00 76.29 L208.12 68.63 L221.49 109.76 L199.90 115.98 L199.90 124.02 L221.49 130.24 L208.12 171.37 L187.00 163.71 L182.28 170.22 L196.09 187.93 L161.10 213.35 L148.51 194.75 L140.87 197.23 L141.62 219.68 L98.38 219.68 L99.13 197.23 L91.49 194.75 L78.90 213.35 L43.91 187.93 L57.72 170.22 L53.00 163.71 L31.88 171.37 L18.51 130.24 L40.10 124.02 L40.10 115.98 L18.51 109.76 L31.88 68.63 L53.00 76.29 L57.72 69.78 L43.91 52.07 L78.90 26.65 L91.49 45.25 Z"/></g>
+  <circle fill="#FFFFFF" cx="120" cy="120" r="58"/>
+  <circle cx="104" cy="120" r="50" fill="#0B2D50"/>
+  <circle cx="104" cy="120" r="44" fill="#FFFFFF"/>
+  <g clip-path="url(#lc)">
+    <g><path fill="#2E6DB4" d="M96,92 l14,-7 l14,7 l-14,7 Z"/><path fill="#1E4D7B" d="M96,92 l14,7 l0,16 l-14,-7 Z"/><path fill="#0B2D50" d="M110,99 l14,-7 l0,16 l-14,7 Z"/></g>
+    <g><path fill="#2E6DB4" d="M80,116 l13,-6.5 l13,6.5 l-13,6.5 Z"/><path fill="#1E4D7B" d="M80,116 l13,6.5 l0,15 l-13,-6.5 Z"/><path fill="#0B2D50" d="M93,122.5 l13,-6.5 l0,15 l-13,6.5 Z"/></g>
+  </g>
+  <rect x="139" y="151" width="13" height="42" rx="6.5" transform="rotate(-45 145.5 172)" fill="#0B2D50"/>
+  <circle cx="150" cy="98" r="22" fill="#FFFFFF"/>
+  <circle cx="150" cy="98" r="19" fill="#2E6DB4"/>
+  <path d="M141 98 l6 7 l12 -14" fill="none" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></g>
+</svg>

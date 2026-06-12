@@ -13,8 +13,20 @@ export function Dashboard() {
     <>
       <PageHeader
         title="Dashboard"
-        learn="This overview is built from the ledger in real time — the balances are the running sum of every movement, never a typed number."
-        learnTl="Live mula sa ledger ang overview na ito — ang balances ay running sum ng bawat movement, hindi naka-type na numero."
+        learn={`Dashboard — how to read this screen
+
+The three tiles up top are quick counts: stock lines (each item at each location), approvals waiting for you, and transfers still in transit.
+
+The big table is your live on-hand: every item, where it is, and how much you have. These come straight from the ledger (the running total of every movement) — never a number anyone typed.
+
+"Rebuild cache from ledger" re-adds every movement from scratch to prove the totals are correct. You rarely need it, but it is there as proof the figures can't drift.`}
+        learnTl={`Dashboard — paano basahin ang screen na ito
+
+Ang tatlong tiles sa itaas ay mabilis na bilang: stock lines (bawat item kada lokasyon), approvals na naghihintay, at transfers na nasa daan pa.
+
+Ang malaking table ay live on-hand mo: bawat item, nasaan, at ilan. Galing mismo sa ledger (running total ng bawat movement) — hindi basta tina-type.
+
+Ang "Rebuild cache from ledger" ay muling binibilang ang lahat ng movement para patunayan na tama ang totals. Bihira mong kailanganin, pero patunay ito na hindi nagkakamali ang numero.`}
         subtitle="On-hand is derived from the ledger (SUM of movements) — never a stored number."
         actions={
           <Button

@@ -16,8 +16,26 @@ export function Reports() {
     <>
       <PageHeader
         title="Reports"
-        learn="These reports turn the ledger into decisions — value on hand, what moved, shrinkage, what to reorder, and what's expiring."
-        learnTl="Ginagawang desisyon ng mga report na ito ang ledger — halaga ng stock, anong gumalaw, shrinkage, ano ang i-reorder, at malapit nang mag-expire."
+        learn={`Reports — reading your audit views
+
+Scroll through the cards: each answers a different question from the same ledger.
+• Stock valuation — what every item is worth (on-hand × cost).
+• Activity — what moved in the last 30 days.
+• Variances — where counts didn't match (possible shrinkage).
+• Reorder alerts — items at or below their reorder point.
+• Expiring — lots nearing their expiry date.
+
+You don't enter anything here — it is all derived from the records, ready for your daily, weekly and monthly review.`}
+        learnTl={`Reports — pagbasa ng audit views
+
+Mag-scroll sa cards: bawat isa'y sumasagot ng ibang tanong mula sa parehong ledger.
+• Stock valuation — halaga ng bawat item (on-hand × presyo).
+• Activity — ano ang gumalaw nitong 30 araw.
+• Variances — saan hindi tugma ang count (posibleng shrinkage).
+• Reorder alerts — items na nasa o pababa na sa reorder point.
+• Expiring — lots na malapit nang mag-expire.
+
+Walang ila-lagay dito — lahat ay galing sa records, handa para sa daily, weekly at monthly review mo.`}
         subtitle="Everything the ledger already knows — valuation, activity, shrinkage, and alerts."
       />
       <ErrorBanner error={valuation.error ?? activity.error ?? varianceR.error} />

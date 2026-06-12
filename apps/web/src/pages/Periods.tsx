@@ -59,8 +59,20 @@ export function Periods() {
     <>
       <PageHeader
         title="Periods"
-        learn="Close and lock a period once it's audited so no one can slip a backdated entry into it."
-        learnTl="I-close at i-lock ang period kapag na-audit na para walang makapag-backdate ng entry dito."
+        learn={`Periods — opening and locking the books
+
+To open a period: pick its type (daily, weekly, monthly) and the start and end dates, then Create. This simply marks out a window of time.
+
+Once that window has been counted and checked, click "Close & lock". Locking blocks any new or back-dated entry from landing inside that window.
+
+In plain terms: it freezes a finished period so the audited numbers can't be quietly changed later.`}
+        learnTl={`Periods — pagbubukas at pag-lock ng libro
+
+Para magbukas: piliin ang type (daily, weekly, monthly) at ang start at end na petsa, tapos Create. Minamarkahan lang nito ang isang window ng panahon.
+
+Kapag nabilang at na-tsek na ang window na iyon, i-click ang "Close & lock". Hinaharangan ng lock ang bago o back-dated na entry sa loob noon.
+
+Sa madaling salita: pinipirmi nito ang tapos nang period para hindi mababago nang palihim ang na-audit na numero.`}
         subtitle="Locking a period blocks any backdated movement into its window."
       />
       <ErrorBanner error={err ?? periods.error} />

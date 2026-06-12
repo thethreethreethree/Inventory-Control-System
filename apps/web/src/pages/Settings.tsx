@@ -94,8 +94,22 @@ export function Settings() {
       <PageHeader
         title="Settings"
         subtitle="Configure the business, accuracy guards, learning mode, locations and categories."
-        learn="The Settings page configures how the whole system behaves — your business name and currency, the accuracy guards that keep inventory exact, the learning mode you're using now, plus your locations and categories."
-        learnTl="Dito iko-configure kung paano kumikilos ang buong sistema — pangalan ng business at currency, ang accuracy guards na nagpapanatili ng tamang inventory, ang learning mode na ginagamit mo ngayon, at mga lokasyon at kategorya."
+        learn={`Settings — configuring the system
+
+Work through the cards and press "Save settings" when done:
+• Business — your name, currency, and default location.
+• Accuracy & control — guards that keep stock exact: prevent negative stock, and require approval for count gaps.
+• Learning mode — the click-to-learn help you are reading now.
+
+Below, add your Locations (branches) and Categories, change your password, and see the users and their roles.`}
+        learnTl={`Settings — pag-configure ng sistema
+
+Dumaan sa cards at pindutin ang "Save settings" pagtapos:
+• Business — pangalan, currency, at default na lokasyon.
+• Accuracy & control — guards para tumpak ang stock: harangan ang negative stock, at hingan ng approval ang count gaps.
+• Learning mode — ang click-to-learn na binabasa mo ngayon.
+
+Sa ibaba, magdagdag ng Locations (branch) at Categories, palitan ang password, at tingnan ang users at roles nila.`}
       />
       <ErrorBanner error={err ?? loaded.error} />
       {saved && <div className="notice">Settings saved.</div>}
@@ -131,8 +145,20 @@ export function Settings() {
           <Card title="Accuracy & control">
             <label
               className="toggle"
-              data-learn="When ON, the ledger refuses any issue, sale or transfer that would push stock below zero at a location — you can never remove what isn't there. Turn off only if you intentionally allow negative balances."
-              data-learn-tl="Kapag ON, tinatanggihan ng ledger ang anumang issue, sale o transfer na magpapababa ng stock sa zero sa isang lokasyon — hindi mo pwedeng alisin ang wala. I-off lang kung sadyang pinapayagan ang negative."
+              data-learn={`Prevent negative stock
+
+Stock should never be a negative number — you can't pour from a bottle that isn't there. A negative balance almost always means something wasn't recorded (a delivery never logged, a wrong count).
+
+When this is ON, the system refuses any issue, sale or transfer that would push an item below zero at a location, forcing the real problem to be fixed first.
+
+Leave it ON unless you have a specific reason to allow negatives.`}
+              data-learn-tl={`Iwasan ang negative stock
+
+Hindi dapat negatibo ang stock — 'di ka makakabuhos mula sa boteng wala. Ang negatibo ay halos laging ibig sabihin may hindi naitala (delivery na 'di na-log, maling bilang).
+
+Kapag ON ito, tinatanggihan ng sistema ang anumang issue, sale o transfer na magpapababa sa item nang wala sa zero, kaya kailangang ayusin muna ang tunay na problema.
+
+Iwang ON maliban kung may espesipikong dahilan para payagan ang negatibo.`}
             >
               <input
                 type="checkbox"
@@ -143,8 +169,20 @@ export function Settings() {
             </label>
             <label
               className="toggle"
-              data-learn="When ON, every count variance must be approved by a manager before stock is corrected. When OFF, variances within tolerance can post automatically."
-              data-learn-tl="Kapag ON, kailangang aprubahan ng manager ang bawat count variance bago maitama ang stock. Kapag OFF, pwedeng automatic ang nasa loob ng tolerance."
+              data-learn={`Require approval for count variances
+
+A "variance" is the gap a stocktake finds between what you counted and what the system expected. Correcting stock is sensitive — it can hide a loss.
+
+When this is ON, every variance must be approved by a second person (a manager) before stock is corrected, so no single person can adjust the books alone.
+
+When OFF, small gaps within your tolerance % can post automatically. Keep it ON for tighter control.`}
+              data-learn-tl={`Hingan ng approval ang count variances
+
+Ang "variance" ay ang pagitan na nakikita ng stocktake sa binilang mo at sa inaasahan ng sistema. Sensitibo ang pagwawasto ng stock — pwedeng pagtakpan ang kalugihan.
+
+Kapag ON, kailangang aprubahan ng pangalawang tao (manager) ang bawat variance bago maitama ang stock, kaya walang iisang tao na mag-aayos ng libro mag-isa.
+
+Kapag OFF, pwedeng automatic ang maliliit na gap na nasa loob ng tolerance %. Iwang ON para mas mahigpit.`}
             >
               <input
                 type="checkbox"
@@ -167,8 +205,20 @@ export function Settings() {
           <Card title="Learning mode">
             <label
               className="toggle"
-              data-learn="This is the switch for the click-based learning system. With it ON, key elements across every page highlight, and clicking one explains what it does instead of performing the action."
-              data-learn-tl="Ito ang switch para sa click-to-learn. Kapag ON, magha-highlight ang mga elemento sa bawat page, at kapag kino-click, ipapaliwanag kung ano ito — tapos i-click ang 'Magpatuloy' para gawin ang aksyon."
+              data-learn={`Enable click-to-learn tutorial
+
+This is the switch for the learning mode you are using right now.
+
+When it is ON, important buttons, fields and links across every page get a dashed highlight. Clicking one opens a plain-language explanation (like this) instead of performing the action.
+
+After reading, press "Got it — continue" to carry out what you clicked, so you can learn and keep working at the same time. Turn it off here once your team is confident.`}
+              data-learn-tl={`I-enable ang click-to-learn tutorial
+
+Ito ang switch para sa learning mode na ginagamit mo ngayon.
+
+Kapag ON, ang mahahalagang button, field at link sa bawat page ay may dashed na highlight. Kapag kino-click, magbubukas ng madaling-intindihang paliwanag (tulad nito) sa halip na gawin agad ang aksyon.
+
+Pagkabasa, pindutin ang "Naintindihan — magpatuloy" para gawin ang pinindot mo, kaya natututo ka habang gumagawa. I-off dito kapag sanay na ang team mo.`}
             >
               <input
                 type="checkbox"

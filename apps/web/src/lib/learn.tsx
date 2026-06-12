@@ -62,8 +62,16 @@ interface Pop {
 }
 
 const T = {
-  en: { hint: "Learning mode — click any highlighted element to learn what it does.", cont: "Continue →", off: "Turn off" },
-  tl: { hint: "Learning mode — i-click ang anumang naka-highlight para malaman ang gamit.", cont: "Magpatuloy →", off: "Isara" },
+  en: {
+    hint: "Learning mode is ON — click any highlighted area for a plain-language, step-by-step explanation (no experience needed).",
+    cont: "Got it — continue →",
+    off: "Turn off",
+  },
+  tl: {
+    hint: "Naka-ON ang Learning mode — i-click ang anumang naka-highlight para sa madaling-intindihang paliwanag, hakbang-hakbang (walang kailangang karanasan).",
+    cont: "Naintindihan — magpatuloy →",
+    off: "Isara",
+  },
 };
 
 export function LearnLayer() {
@@ -134,28 +142,35 @@ export function LearnLayer() {
         </button>
         <button onClick={turnOff}>{t.off}</button>
       </div>
-      {pop && (
-        <>
-          <div className="learn-pop-backdrop" onClick={() => setPop(null)} />
-          <div
-            className="learn-pop"
-            style={{
-              left: Math.max(8, Math.min(pop.x - 130, window.innerWidth - 270)),
-              top: pop.y + 10,
-            }}
-          >
-            {pop.text}
-            <div className="learn-pop-actions">
-              <button className="learn-continue" onClick={proceed}>
-                {t.cont}
-              </button>
-            </div>
-            <button className="learn-pop-x" onClick={() => setPop(null)} aria-label="Close">
-              ×
-            </button>
-          </div>
-        </>
-      )}
+      {pop &&
+        (() => {
+          const nl = pop.text.indexOf("\n");
+          const head = nl >= 0 ? pop.text.slice(0, nl).trim() : pop.text;
+          const body = nl >= 0 ? pop.text.slice(nl + 1).trim() : "";
+          return (
+            <>
+              <div className="learn-pop-backdrop" onClick={() => setPop(null)} />
+              <div
+                className="learn-pop"
+                style={{
+                  left: Math.max(8, Math.min(pop.x - 185, window.innerWidth - 380)),
+                  top: Math.max(8, Math.min(pop.y + 10, window.innerHeight - 360)),
+                }}
+              >
+                <button className="learn-pop-x" onClick={() => setPop(null)} aria-label="Close">
+                  ×
+                </button>
+                <div className="learn-pop-head">{head}</div>
+                {body && <div className="learn-pop-body">{body}</div>}
+                <div className="learn-pop-actions">
+                  <button className="learn-continue" onClick={proceed}>
+                    {t.cont}
+                  </button>
+                </div>
+              </div>
+            </>
+          );
+        })()}
     </>
   );
 }

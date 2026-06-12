@@ -86,8 +86,20 @@ export function Items() {
     <>
       <PageHeader
         title="Items"
-        learn="Browse the full item master. Use search and the category filter to find any product and see its current on-hand. Admins can add new items here."
-        learnTl="Tingnan ang buong item master. Gamitin ang search at category filter para hanapin ang item at makita ang on-hand. Pwedeng magdagdag ng item ang admin dito."
+        learn={`Items — finding products and setting cost
+
+This table is every product with its current on-hand and unit. Type in the Search box (by name or SKU — the short product code) or pick a Category to narrow the list.
+
+To set what a product costs, click its Cost cell and type the price you pay per unit (e.g. per bottle). The system stores it and uses it to value your stock in Reports.
+
+Admins can add a new product with "+ New item": give it a code (SKU), a name, a type, and the base unit you will measure it in.`}
+        learnTl={`Items — paghahanap at pagtatakda ng presyo
+
+Ang table ay bawat produkto kasama ang kasalukuyang on-hand at unit. Mag-type sa Search (pangalan o SKU — ang maikling code) o pumili ng Category para paikliin.
+
+Para itakda ang presyo, i-click ang Cost cell at i-type ang binabayad mo kada unit (hal. kada bottle). Ise-save ito at gagamitin sa pag-value ng stock sa Reports.
+
+Pwedeng magdagdag ang admin gamit ang "+ New item": bigyan ng code (SKU), pangalan, type, at base unit na gagamitin sa pagsukat.`}
         subtitle={`Item master — ${data?.length ?? 0} items`}
         actions={
           <Button variant="ghost" onClick={() => setShowAdd((s) => !s)}>

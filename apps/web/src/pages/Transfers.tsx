@@ -65,8 +65,20 @@ export function Transfers() {
     <>
       <PageHeader
         title="Transfers"
-        learn="Create a transfer to send stock to another venue; it stays 'in transit' until the receiving side confirms it — so nothing disappears mid-move."
-        learnTl="Gumawa ng transfer para magpadala ng stock sa ibang lokasyon; 'in transit' muna ito hanggang i-confirm ng tatanggap — para walang mawala sa daan."
+        learn={`Transfers — sending and confirming stock
+
+To send: choose the From and To locations, the Item and quantity, then Send. The stock leaves the source immediately and the transfer shows as "in transit".
+
+When the goods physically arrive, the receiver opens the transfer and clicks "Confirm receipt". Only then is the stock added to the destination.
+
+Why two steps? It models real life — goods on a truck belong to neither branch yet — and records exactly who released and who received them.`}
+        learnTl={`Transfers — pagpapadala at pag-confirm ng stock
+
+Para magpadala: piliin ang From at To na lokasyon, ang Item at dami, tapos Send. Agad na lalabas ang stock sa pinagmulan at "in transit" ang transfer.
+
+Pagdating ng goods, bubuksan ng tatanggap ang transfer at pipindutin ang "Confirm receipt". Saka lang madadagdag sa destinasyon ang stock.
+
+Bakit dalawang hakbang? Tulad ito ng totoo — ang goods sa truck ay wala pa sa kahit aling branch — at naitatala kung sino naglabas at sino tumanggap.`}
         subtitle="Stock leaves the source now; the destination is credited only when the receiver confirms."
       />
       <ErrorBanner error={err ?? transfers.error} />

@@ -29,8 +29,20 @@ export function Adjustments() {
     <>
       <PageHeader
         title="Adjustments"
-        learn="Each row is a proposed stock correction. Approving it posts the fix to the ledger; you can't approve one you raised yourself (separation of duties)."
-        learnTl="Bawat row ay panukalang pagwawasto ng stock. Kapag in-approve, isusulat ito sa ledger; 'di mo pwedeng aprubahan ang sarili mong request (separation of duties)."
+        learn={`Adjustments — approving a correction
+
+Each row is a proposed fix to stock — usually raised automatically by a count that found a gap. It shows the item, the location, and the "delta" (how much it would add or remove).
+
+To accept it, click Approve: the system posts a matching movement so your stock equals reality. Click Reject if it looks wrong.
+
+You cannot approve a correction you raised yourself. To approve one, the "Acting as" user at the top must be a different person — this separation is what keeps the books honest.`}
+        learnTl={`Adjustments — pag-apruba ng pagwawasto
+
+Bawat row ay panukalang ayos sa stock — kadalasang awtomatikong galing sa count na may natagpuang gap. Ipinapakita ang item, lokasyon, at ang "delta" (ilan ang idadagdag o babawasin).
+
+Para tanggapin, i-click ang Approve: magpo-post ang sistema ng katugmang movement para tugma sa totoo ang stock. I-Reject kung mukhang mali.
+
+Hindi mo pwedeng aprubahan ang sarili mong request. Para mag-approve, ang "Acting as" na user sa itaas ay dapat ibang tao — ito ang nagpapanatiling tapat ng libro.`}
         subtitle="Stock corrections require approval — and the approver must differ from the requester."
       />
       <ErrorBanner error={err ?? adjustments.error} />

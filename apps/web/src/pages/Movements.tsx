@@ -59,8 +59,24 @@ export function Movements() {
     <>
       <PageHeader
         title="Movements"
-        learn="Use this form to record a single stock change. Pick the type — the system applies the right + or − automatically and writes it to the ledger."
-        learnTl="Gamitin ang form na ito para mag-record ng isang galaw ng stock. Piliin ang type — automatic ang tamang + o − at isusulat sa ledger."
+        learn={`Movements — how to log one stock change
+
+Use the form to record a single change:
+1. Pick the Item and the Location it happened at.
+2. Pick the Type — receipt (stock in), issue (sold/used), waste, breakage, or comp (given away).
+3. Enter the quantity as a plain positive number; the system applies the + or − for you.
+4. Optionally add a reason, then press Post.
+
+It appears instantly in the ledger below. Posted entries can't be edited — that is what makes the record trustworthy.`}
+        learnTl={`Movements — paano itala ang isang galaw
+
+Gamitin ang form para sa isang pagbabago:
+1. Piliin ang Item at ang Location kung saan nangyari.
+2. Piliin ang Type — receipt (pasok), issue (benta/gamit), waste, breakage, o comp (ibinigay).
+3. Ilagay ang dami bilang positibong numero lang; ang sistema na ang maglalagay ng + o −.
+4. Opsyonal na maglagay ng reason, tapos pindutin ang Post.
+
+Agad itong lalabas sa ledger sa ibaba. Hindi na ma-e-edit ang nai-post — kaya maaasahan ang record.`}
         subtitle="Record a receipt, issue, waste, breakage or comp. The sign is derived from the type."
       />
       <ErrorBanner error={err ?? feed.error} />

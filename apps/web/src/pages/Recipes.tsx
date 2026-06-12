@@ -84,8 +84,20 @@ export function Recipes() {
     <>
       <PageHeader
         title="Recipes & Sales"
-        learn="Build recipes so that ingesting sales automatically subtracts each ingredient from stock — consumption captured without keying every pour."
-        learnTl="Gumawa ng recipe para kapag nag-import ng sales, automatic na nababawas ang bawat sangkap sa stock — nakukuha ang konsumo nang 'di kino-key ang bawat pour."
+        learn={`Recipes & Sales — set recipes, then record sales
+
+Left side — build a recipe: name the drink, then add each component (ingredient), how much of it one serving uses, and the unit. Add as many components as you need, then Create.
+
+Right side — record a sale: pick the recipe, the quantity sold, and the location, then Ingest. The system instantly subtracts every ingredient that sale used, and shows you exactly what was depleted.
+
+This is how you track usage at a busy bar without logging each pour by hand.`}
+        learnTl={`Recipes & Sales — mag-set ng recipe, tapos itala ang benta
+
+Kaliwa — gumawa ng recipe: pangalanan ang inumin, idagdag ang bawat component (sangkap), gaano kadami kada serving, at ang unit. Magdagdag ng components hangga't kailangan, tapos Create.
+
+Kanan — itala ang benta: piliin ang recipe, dami na naibenta, at lokasyon, tapos Ingest. Agad na ibinabawas ng sistema ang bawat sangkap na nagamit, at ipinapakita kung ano ang nabawas.
+
+Ganito sinusubaybayan ang konsumo sa abalang bar nang hindi kino-log ang bawat buhos.`}
         subtitle="A recipe maps a sold item to component quantities. Ingesting sales auto-depletes the components — consumption captured without keying every pour."
       />
       <ErrorBanner error={err} />
