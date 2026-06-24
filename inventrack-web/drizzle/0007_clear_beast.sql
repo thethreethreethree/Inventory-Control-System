@@ -1,0 +1,1 @@
+ALTER TABLE "items" ADD COLUMN "default_cost" numeric(14, 6);
