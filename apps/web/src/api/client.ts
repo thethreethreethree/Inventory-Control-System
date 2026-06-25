@@ -51,7 +51,22 @@ async function req<T>(method: string, path: string, body?: unknown): Promise<T> 
     window.location.reload();
   }
   const text = await res.text();
-  const data = text ? JSON.parse(text) : null;
+  let data: unknown = null;
+  if (text) {
+    try {
+      data = JSON.parse(text);
+    } catch {
+      // Non-JSON response — usually an HTML error page because the API/database
+      // isn't reachable. Surface a clear message instead of a JSON parse error.
+      throw new ApiError(
+        res.status,
+        res.ok
+          ? "The server returned an unexpected (non-JSON) response."
+          : `Couldn't reach the API (HTTP ${res.status}). Is the API server and database running?`,
+        text.slice(0, 300),
+      );
+    }
+  }
   if (!res.ok) {
     const msg =
       (data && typeof data === "object" && "error" in data
